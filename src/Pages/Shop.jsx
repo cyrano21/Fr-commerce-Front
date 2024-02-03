@@ -13,12 +13,12 @@ const Shop = () => {
   const fetchInfo = async () => {
     try {
       const popularResponse = await axios.get(
-        'site--e-commerce-backend--cl5kfjmsrksj.code.run/popularinwomen',
+        'https://site--e-commerce-backend--cl5kfjmsrksj.code.run/popularinwomen',
       )
       setPopular(popularResponse.data)
 
       const newCollectionResponse = await axios.get(
-        'site--e-commerce-backend--cl5kfjmsrksj.code.run/newcollections',
+        'https://site--e-commerce-backend--cl5kfjmsrksj.code.run/newcollections',
       )
       setNewcollection(newCollectionResponse.data)
     } catch (error) {

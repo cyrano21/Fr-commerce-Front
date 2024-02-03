@@ -14,14 +14,17 @@ const LoginSignup = () => {
 
   const login = async () => {
     let dataObj
-    await fetch('site--e-commerce-backend--cl5kfjmsrksj.code.run/login', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/form-data',
-        'Content-Type': 'application/json',
+    await fetch(
+      'https://site--e-commerce-backend--cl5kfjmsrksj.code.run//login',
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/form-data',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       },
-      body: JSON.stringify(formData),
-    })
+    )
       .then((resp) => resp.json())
       .then((data) => {
         dataObj = data
@@ -37,14 +40,17 @@ const LoginSignup = () => {
 
   const signup = async () => {
     let dataObj
-    await fetch('site--e-commerce-backend--cl5kfjmsrksj.code.run/signup', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/form-data',
-        'Content-Type': 'application/json',
+    await fetch(
+      'https://site--e-commerce-backend--cl5kfjmsrksj.code.run/signup',
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/form-data',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       },
-      body: JSON.stringify(formData),
-    })
+    )
       .then((resp) => resp.json())
       .then((data) => {
         dataObj = data

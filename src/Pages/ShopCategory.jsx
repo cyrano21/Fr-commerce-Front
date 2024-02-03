@@ -10,7 +10,7 @@ const ShopCategory = (props) => {
   const fetchInfo = async () => {
     try {
       const response = await axios.get(
-        'site--e-commerce-backend--cl5kfjmsrksj.code.run/allproducts',
+        'https://site--e-commerce-backend--cl5kfjmsrksj.code.run/allproducts',
       )
       console.log(response.data) // Afficher la réponse pour le débogage
       if (response.status === 200 && Array.isArray(response.data)) {

@@ -1,7 +1,7 @@
 import footer_logo from '../assets/logo_big.png'
-import instagram_icon from '../Assets/instagram_icon.png'
-import pintrest_icon from '../Assets/pintester_icon.png'
-import whatsapp_icon from '../Assets/whatsapp_icon.png'
+import instagram_icon from '../assets/instagram_icon.png'
+import pintrest_icon from '../assets/pintester_icon.png'
+import whatsapp_icon from '../assets/whatsapp_icon.png'
 
 const Footer = () => {
   return (

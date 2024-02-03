@@ -14,7 +14,7 @@ const LoginSignup = () => {
 
   const login = async () => {
     let dataObj
-    await fetch('http://localhost:4000/login', {
+    await fetch('site--e-commerce-backend--cl5kfjmsrksj.code.run/login', {
       method: 'POST',
       headers: {
         Accept: 'application/form-data',
@@ -37,7 +37,7 @@ const LoginSignup = () => {
 
   const signup = async () => {
     let dataObj
-    await fetch('http://localhost:4000/signup', {
+    await fetch('site--e-commerce-backend--cl5kfjmsrksj.code.run/signup', {
       method: 'POST',
       headers: {
         Accept: 'application/form-data',

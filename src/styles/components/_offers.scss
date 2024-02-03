@@ -1,0 +1,133 @@
+.offers {
+  width: 65%;
+  height: 60vh;
+  display: flex;
+  margin: auto;
+  padding: 0px 140px 150px;
+  background: linear-gradient(180deg, #fde1ff 0%, #e1ffea22 60%);
+
+  .offers-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    h1 {
+      color: #171717;
+      font-size: 80px;
+      font-weight: 600;
+    }
+
+    p {
+      color: #171717;
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    button {
+      width: 282px;
+      height: 69px;
+      flex-shrink: 0;
+      border-radius: 34.5px;
+      background: #ff4141;
+      border: none;
+      color: #fff;
+      font-size: 22px;
+      font-weight: 500;
+      margin-top: 30px;
+      cursor: pointer;
+    }
+  }
+
+  .offers-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-top: 50px;
+  }
+
+  @media (max-width: 1280px) {
+    padding: 0 60px;
+    margin-bottom: 80px;
+    height: 40vh;
+
+    .offers-left {
+      h1 {
+        font-size: 30px;
+      }
+
+      p {
+        font-size: 16px;
+      }
+
+      button {
+        width: 160px;
+        height: 40px;
+        font-size: 16px;
+      }
+    }
+
+    .offers-right {
+      padding-top: 10px;
+
+      img {
+        width: 200px;
+      }
+    }
+  }
+
+  @media (max-width: 800px) {
+    margin-bottom: 60px;
+
+    .offers-left {
+      h1 {
+        font-size: 22px;
+      }
+
+      p {
+        font-size: 13px;
+      }
+
+      button {
+        width: 140px;
+        height: 30px;
+        font-size: 12px;
+      }
+    }
+
+    .offers-right {
+      img {
+        width: 180px;
+      }
+    }
+  }
+
+  @media (max-width: 500px) {
+    height: 25vh;
+    margin-bottom: 50px;
+
+    .offers-left {
+      h1 {
+        font-size: 16px;
+      }
+
+      p {
+        font-size: 10px;
+      }
+
+      button {
+        width: 120px;
+        height: 25px;
+        font-size: 10px;
+        margin-top: 12px;
+      }
+    }
+
+    .offers-right {
+      img {
+        width: 120px;
+      }
+    }
+  }
+}

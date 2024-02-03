@@ -15,7 +15,7 @@ const LoginSignup = () => {
   const login = async () => {
     let dataObj
     await fetch(
-      'https://site--e-commerce-backend--cl5kfjmsrksj.code.run//login',
+      'https://site--e-commerce-backend--cl5kfjmsrksj.code.run/login',
       {
         method: 'POST',
         headers: {

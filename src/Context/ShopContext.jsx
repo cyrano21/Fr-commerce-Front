@@ -73,7 +73,7 @@ const ShopContextProvider = (props) => {
     setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }))
     if (localStorage.getItem('auth-token')) {
       fetch(
-        'https://site--e-commerce-backend--cl5kfjmsrksj.code.run//addtocart',
+        'https://site--e-commerce-backend--cl5kfjmsrksj.code.run/addtocart',
         {
           method: 'POST',
           headers: {
@@ -106,7 +106,7 @@ const ShopContextProvider = (props) => {
     setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }))
     if (localStorage.getItem('auth-token')) {
       fetch(
-        'https://site--e-commerce-backend--cl5kfjmsrksj.code.run//removefromcart',
+        'https://site--e-commerce-backend--cl5kfjmsrksj.code.run/removefromcart',
         {
           method: 'POST',
           headers: {

@@ -19,7 +19,7 @@ const ProductDisplay = (props) => {
         <div className="productdisplay-img">
           <img
             className="productdisplay-main-img"
-            src={product.image}
+            src={`https://site--e-commerce-backend--cl5kfjmsrksj.code.run${product.image}`}
             alt="img"
           />
         </div>

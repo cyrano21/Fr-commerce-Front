@@ -1,5 +1,7 @@
 import { createContext, useEffect, useState } from 'react'
 
+const backendUrl = import.meta.env.VITE_BACKEND_URL
+
 export const ShopContext = createContext(null)
 
 const ShopContextProvider = (props) => {
@@ -27,12 +29,12 @@ const ShopContextProvider = (props) => {
   const [cartItems, setCartItems] = useState(getDefaultCart())
 
   useEffect(() => {
-    fetch('https://site--e-commerce-backend--cl5kfjmsrksj.code.run/allproducts')
+    fetch(`${backendUrl}/allproducts`)
       .then((res) => res.json())
       .then((data) => setProducts(data))
 
     if (localStorage.getItem('auth-token')) {
-      fetch('https://site--e-commerce-backend--cl5kfjmsrksj.code.run/getcart', {
+      fetch(`${backendUrl}/getcart`, {
         method: 'POST',
         headers: {
           Accept: 'application/form-data',
@@ -72,18 +74,15 @@ const ShopContextProvider = (props) => {
   const addToCart = (itemId) => {
     setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }))
     if (localStorage.getItem('auth-token')) {
-      fetch(
-        'https://site--e-commerce-backend--cl5kfjmsrksj.code.run/addtocart',
-        {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'auth-token': localStorage.getItem('auth-token'),
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ itemId: itemId }),
+      fetch(`${backendUrl}/addtocart`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'auth-token': localStorage.getItem('auth-token'),
+          'Content-Type': 'application/json',
         },
-      )
+        body: JSON.stringify({ itemId: itemId }),
+      })
         .then((response) => {
           if (!response.ok) {
             throw new Error('Network response was not ok')
@@ -105,18 +104,15 @@ const ShopContextProvider = (props) => {
   const removeFromCart = (itemId) => {
     setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }))
     if (localStorage.getItem('auth-token')) {
-      fetch(
-        'https://site--e-commerce-backend--cl5kfjmsrksj.code.run/removefromcart',
-        {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'auth-token': localStorage.getItem('auth-token'),
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ itemId: itemId }),
+      fetch(`${backendUrl}/removefromcart`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'auth-token': localStorage.getItem('auth-token'),
+          'Content-Type': 'application/json',
         },
-      )
+        body: JSON.stringify({ itemId: itemId }),
+      })
         .then((response) => {
           if (!response.ok) {
             throw new Error('Network response was not ok')

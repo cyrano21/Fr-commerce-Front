@@ -1,8 +1,11 @@
 .payment-page {
-  margin: 100px 170px;
+  margin: 100px auto;
+  padding: 0 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+  max-width: 800px;
 }
 
 .payment-form {
@@ -18,6 +21,7 @@
   margin: 5px 0;
   border: 1px solid #ccc;
   border-radius: 5px;
+  width: calc(100% - 22px); /* 10px padding on each side + 1px border on each side */
 }
 
 .total-amount {
@@ -33,12 +37,12 @@
   border-radius: 5px;
   cursor: pointer;
   margin-top: 20px;
+  width: 100%;
 }
 
 .payment-form button:hover {
   background-color: #5469d4;
 }
-
 
 .payment-method {
   display: flex;
@@ -55,6 +59,7 @@
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  width: fit-content;
 }
 
 .payment-method-option:hover {
@@ -64,4 +69,74 @@
 .payment-method-option span {
   font-size: 18px;
   color: #555;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .payment-page {
+    div {
+      background: #FDEDED;
+      width: 70%;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .payment-form {
+      max-width: 100%;
+      padding: 0 10px; // Ajout de padding pour éviter que les éléments touchent les bords
+    }
+
+    .payment-form input, .payment-form button {
+      width: calc(100% - 20px); // Ajuster la largeur pour prendre en compte le padding
+    }
+
+    .payment-method {
+      flex-direction: column;
+    }
+
+    .payment-method-option {
+      width: 100%;
+      justify-content: center; // Centrer le contenu pour les options de paiement
+    }
+
+  }
+
+
+}
+
+@media (max-width: 480px) {
+
+  div {
+    width: 80%;
+
+    .payment-page {
+      width: 100vw;
+      max-height: 100%;
+      padding: 0 10px;
+    }
+
+    .payment-form {
+      max-width: 70%;
+      padding: 0 10px;
+    }
+
+    .payment-form input, .payment-form button {
+      width: calc(100% - 20px); // Ajuster la largeur pour prendre en compte le padding
+    }
+
+    .payment-method {
+      flex-direction: column;
+    }
+
+    .payment-method-option {
+      width: 100%;
+      justify-content: center; // Centrer le contenu pour les options de paiement
+    }
+  }
+
+
 }

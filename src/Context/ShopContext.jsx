@@ -1,10 +1,11 @@
 import { createContext, useEffect, useState } from 'react'
 
-const backendUrl = import.meta.env.VITE_BACKEND_URL
+//const backendUrl = import.meta.env.VITE_BACKEND_URL
 
 export const ShopContext = createContext(null)
-
+const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL
 const ShopContextProvider = (props) => {
+  console.log('props>>>', props)
   const [products, setProducts] = useState([])
 
   const increaseQuantity = (itemId) => {
@@ -51,14 +52,15 @@ const ShopContextProvider = (props) => {
   }, [])
 
   const getTotalCartAmount = () => {
-    let totalAmount = 0
-    for (const item in cartItems) {
-      if (cartItems[item] > 0) {
-        let itemInfo = products.find((product) => product.id === Number(item))
-        totalAmount += cartItems[item] * itemInfo.new_price
+    return Object.keys(cartItems).reduce((total, itemId) => {
+      const product = products.find(
+        (p) => p.id && p.id.toString() === itemId.toString(),
+      )
+      if (product && product.new_price) {
+        total += product.new_price * cartItems[itemId]
       }
-    }
-    return totalAmount
+      return total
+    }, 0)
   }
 
   const getTotalCartItems = () => {

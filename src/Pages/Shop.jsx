@@ -12,13 +12,12 @@ const Shop = () => {
 
   const fetchInfo = async () => {
     try {
-      const popularResponse = await axios.get(
-        'https://site--e-commerce-backend--cl5kfjmsrksj.code.run/popularinwomen',
-      )
+      const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL
+      const popularResponse = await axios.get(`${backendUrl}/popularinwomen`)
       setPopular(popularResponse.data)
 
       const newCollectionResponse = await axios.get(
-        'https://site--e-commerce-backend--cl5kfjmsrksj.code.run/newcollections',
+        `${backendUrl}/newcollections`,
       )
       setNewcollection(newCollectionResponse.data)
     } catch (error) {

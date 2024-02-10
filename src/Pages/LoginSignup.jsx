@@ -1,11 +1,12 @@
 import { useState } from 'react'
 
+const backendUrl = import.meta.env.VITE_BACKEND_URL
 const LoginSignup = () => {
-  const [state, setState] = useState('Connexion')
+  const [state, setState] = useState('Login')
   const [formData, setFormData] = useState({
     username: '',
     email: '',
-    password: '',
+    password: ''
   })
 
   const changeHandler = (e) => {
@@ -14,17 +15,14 @@ const LoginSignup = () => {
 
   const login = async () => {
     let dataObj
-    await fetch(
-      'https://site--e-commerce-backend--cl5kfjmsrksj.code.run/login',
-      {
-        method: 'POST',
-        headers: {
-          Accept: 'application/form-data',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+    await fetch('http://localhost:4000/login', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/form-data',
+        'Content-Type': 'application/json'
       },
-    )
+      body: JSON.stringify(formData)
+    })
       .then((resp) => resp.json())
       .then((data) => {
         dataObj = data
@@ -40,17 +38,13 @@ const LoginSignup = () => {
 
   const signup = async () => {
     let dataObj
-    await fetch(
-      'https://site--e-commerce-backend--cl5kfjmsrksj.code.run/signup',
-      {
-        method: 'POST',
-        headers: {
-          Accept: 'application/form-data',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+    await fetch('http://localhost:4000/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
       },
-    )
+      body: JSON.stringify(formData)
+    })
       .then((resp) => resp.json())
       .then((data) => {
         dataObj = data
@@ -65,15 +59,15 @@ const LoginSignup = () => {
   }
 
   return (
-    <div className="loginsignup">
-      <div className="loginsignup-container">
+    <div className='loginsignup'>
+      <div className='loginsignup-container'>
         <h1>{state}</h1>
-        <div className="loginsignup-fields">
-          {state === 'Inscription' ? (
+        <div className='loginsignup-fields'>
+          {state === 'Sign Up' ? (
             <input
-              type="text"
-              placeholder="Votre nom"
-              name="username"
+              type='text'
+              placeholder='Votre nom'
+              name='username'
               value={formData.username}
               onChange={changeHandler}
             />
@@ -81,45 +75,45 @@ const LoginSignup = () => {
             <></>
           )}
           <input
-            type="email"
-            placeholder="Adresse e-mail"
-            name="email"
+            type='email'
+            placeholder='Adresse e-mail'
+            name='email'
             value={formData.email}
             onChange={changeHandler}
           />
           <input
-            type="password"
-            placeholder="Mot de passe"
-            name="password"
+            type='password'
+            placeholder='Mot de passe'
+            name='password'
             value={formData.password}
             onChange={changeHandler}
           />
         </div>
         <button
           onClick={() => {
-            state === 'Connexion' ? login() : signup()
+            state === 'Login' ? login() : signup()
           }}
         >
           Continuer
         </button>
 
-        {state === 'Connexion' ? (
-          <p className="loginsignup-login">
-            Créer un compte ?{' '}
+        {state === 'Login' ? (
+          <p className='loginsignup-login'>
+            Créer un compte ?
             <span
               onClick={() => {
-                setState('Inscription')
+                setState('Sign Up')
               }}
             >
               Cliquez ici
             </span>
           </p>
         ) : (
-          <p className="loginsignup-login">
-            Vous avez déjà un compte ?{' '}
+          <p className='loginsignup-login'>
+            Vous avez déjà un compte ?
             <span
               onClick={() => {
-                setState('Connexion')
+                setState('Login')
               }}
             >
               Connectez-vous ici
@@ -127,8 +121,8 @@ const LoginSignup = () => {
           </p>
         )}
 
-        <div className="loginsignup-agree">
-          <input type="checkbox" name="" id="" />
+        <div className='loginsignup-agree'>
+          <input type='checkbox' name='' id='' />
           <p>
             En continuant, j'accepte les conditions d'utilisation et la
             politique de confidentialité.

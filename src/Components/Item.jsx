@@ -1,22 +1,21 @@
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom' // Ajoutez cette ligne pour importer Link
 
-const Item = (props) => {
-  const handleImageClick = () => {
-    window.scrollTo(0, 0)
-  }
-
-  // Et dans votre balise img
-  ;<img onClick={handleImageClick} src={props.image} alt="products" />
-
+const Item = ({ id, name, image, new_price, old_price }) => {
   return (
     <div className="item">
-      <Link to={`/product/${props.id}`} style={{ textDecoration: 'none' }}>
-        <img onClick={window.scrollTo(0, 0)} src={props.image} alt="products" />
+      <Link to={`/product/${id}`} style={{ textDecoration: 'none' }}>
+        {image && (
+          <img
+            src={image}
+            alt={name}
+            style={{ maxWidth: '100%', height: 'auto' }}
+          />
+        )}
       </Link>
-      <p>{props.name}</p>
+      <p>{name}</p>
       <div className="item-prices">
-        <div className="item-price-new">${props.new_price}</div>
-        <div className="item-price-old">${props.old_price}</div>
+        <div className="item-price-new">${new_price}</div>
+        <div className="item-price-old">${old_price}</div>
       </div>
     </div>
   )

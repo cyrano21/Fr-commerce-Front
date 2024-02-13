@@ -1,11 +1,20 @@
-import { useContext } from 'react'
+/* eslint-disable react/prop-types */
+import { useContext, useState } from 'react'
 import star_dull_icon from '../assets/star_dull_icon.png'
 import { ShopContext } from '../Context/ShopContext.jsx'
 import star_icon from '../assets/star_icon.png'
+import Modal from './Modal.jsx'
 
 const ProductDisplay = (props) => {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
   const { product } = props
   const { addToCart } = useContext(ShopContext)
+
+  const handleAddToCart = () => {
+    addToCart(product.id)
+    setIsModalOpen(true)
+  }
 
   return (
     <div className="productdisplay">
@@ -19,6 +28,7 @@ const ProductDisplay = (props) => {
         <div className="productdisplay-img">
           <img
             className="productdisplay-main-img"
+            // eslint-disable-next-line react/prop-types
             src={product.image}
             alt="img"
           />
@@ -58,13 +68,7 @@ const ProductDisplay = (props) => {
             <div>XXL</div>
           </div>
         </div>
-        <button
-          onClick={() => {
-            addToCart(product.id)
-          }}
-        >
-          AJOUTER AU PANIER
-        </button>
+        <button onClick={handleAddToCart}>AJOUTER AU PANIER</button>
         <p className="productdisplay-right-category">
           <span>Category :</span> Femmes, T-shirt, Crop Top
         </p>
@@ -72,6 +76,12 @@ const ProductDisplay = (props) => {
           <span>Tags :</span> Modern, Latest
         </p>
       </div>
+      {isModalOpen && (
+        <Modal onClose={() => setIsModalOpen(false)}>
+          <p>Le produit a bien été ajouté au panier !</p>
+          <button onClick={() => setIsModalOpen(false)}></button>
+        </Modal>
+      )}
     </div>
   )
 }

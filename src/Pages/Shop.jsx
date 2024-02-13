@@ -13,7 +13,11 @@ const Shop = () => {
   const fetchInfo = async () => {
     try {
       const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL
-      const popularResponse = await axios.get(`${backendUrl}/popularinwomen`)
+
+      console.log('backendUrl')
+      const popularResponse = await axios.get(`${backendUrl}/popularproducts`)
+      console.log('popularResponse.data', popularResponse.data)
+
       setPopular(popularResponse.data)
 
       const newCollectionResponse = await axios.get(

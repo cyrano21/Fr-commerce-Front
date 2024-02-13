@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Item from '../Components/Item'
 import dropdown_icon from '../assets/dropdown_icon.png'

@@ -1,12 +1,12 @@
 import { useState } from 'react'
+import axiosInstance from '/axiosConfig'
 
-const backendUrl = import.meta.env.VITE_BACKEND_URL
 const LoginSignup = () => {
   const [state, setState] = useState('Login')
   const [formData, setFormData] = useState({
     username: '',
     email: '',
-    password: ''
+    password: '',
   })
 
   const changeHandler = (e) => {
@@ -14,60 +14,37 @@ const LoginSignup = () => {
   }
 
   const login = async () => {
-    let dataObj
-    await fetch('http://localhost:4000/login', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/form-data',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(formData)
-    })
-      .then((resp) => resp.json())
-      .then((data) => {
-        dataObj = data
-      })
-    console.log(dataObj)
-    if (dataObj.success) {
-      localStorage.setItem('auth-token', dataObj.token)
+    // Remplacez fetch par axiosInstance.post
+    try {
+      const response = await axiosInstance.post('/login', formData)
+      localStorage.setItem('auth-token', response.data.token)
       window.location.replace('/')
-    } else {
-      alert(dataObj.errors)
+    } catch (error) {
+      alert('Erreur lors de la connexion')
     }
   }
 
   const signup = async () => {
-    let dataObj
-    await fetch('http://localhost:4000/signup', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(formData)
-    })
-      .then((resp) => resp.json())
-      .then((data) => {
-        dataObj = data
-      })
-
-    if (dataObj.success) {
-      localStorage.setItem('auth-token', dataObj.token)
+    // Identique pour l'inscription
+    try {
+      const response = await axiosInstance.post('/signup', formData)
+      localStorage.setItem('auth-token', response.data.token)
       window.location.replace('/')
-    } else {
-      alert(dataObj.errors)
+    } catch (error) {
+      alert("Erreur lors de l'inscription")
     }
   }
 
   return (
-    <div className='loginsignup'>
-      <div className='loginsignup-container'>
+    <div className="loginsignup">
+      <div className="loginsignup-container">
         <h1>{state}</h1>
-        <div className='loginsignup-fields'>
+        <div className="loginsignup-fields">
           {state === 'Sign Up' ? (
             <input
-              type='text'
-              placeholder='Votre nom'
-              name='username'
+              type="text"
+              placeholder="Votre nom"
+              name="username"
               value={formData.username}
               onChange={changeHandler}
             />
@@ -75,16 +52,16 @@ const LoginSignup = () => {
             <></>
           )}
           <input
-            type='email'
-            placeholder='Adresse e-mail'
-            name='email'
+            type="email"
+            placeholder="Adresse e-mail"
+            name="email"
             value={formData.email}
             onChange={changeHandler}
           />
           <input
-            type='password'
-            placeholder='Mot de passe'
-            name='password'
+            type="password"
+            placeholder="Mot de passe"
+            name="password"
             value={formData.password}
             onChange={changeHandler}
           />
@@ -98,7 +75,7 @@ const LoginSignup = () => {
         </button>
 
         {state === 'Login' ? (
-          <p className='loginsignup-login'>
+          <p className="loginsignup-login">
             Créer un compte ?
             <span
               onClick={() => {
@@ -109,7 +86,7 @@ const LoginSignup = () => {
             </span>
           </p>
         ) : (
-          <p className='loginsignup-login'>
+          <p className="loginsignup-login">
             Vous avez déjà un compte ?
             <span
               onClick={() => {
@@ -121,11 +98,11 @@ const LoginSignup = () => {
           </p>
         )}
 
-        <div className='loginsignup-agree'>
-          <input type='checkbox' name='' id='' />
+        <div className="loginsignup-agree">
+          <input type="checkbox" name="" id="" />
           <p>
-            En continuant, j'accepte les conditions d'utilisation et la
-            politique de confidentialité.
+            En continuant, j`&apos;`accepte les conditions d`&apos;`utilisation
+            et la politique de confidentialité.
           </p>
         </div>
       </div>

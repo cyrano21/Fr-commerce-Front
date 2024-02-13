@@ -1,11 +1,9 @@
 import { createContext, useEffect, useState } from 'react'
 
-//const backendUrl = import.meta.env.VITE_BACKEND_URL
+const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL
 
 export const ShopContext = createContext(null)
-const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL
 const ShopContextProvider = (props) => {
-  console.log('props>>>', props)
   const [products, setProducts] = useState([])
 
   const increaseQuantity = (itemId) => {
@@ -144,7 +142,9 @@ const ShopContextProvider = (props) => {
     decreaseQuantity,
   }
   return (
-    <ShopContext.Provider value={contextValue}>
+    <ShopContext.Provider
+      value={{ ...contextValue, setCartItems, getDefaultCart }}
+    >
       {props.children}
     </ShopContext.Provider>
   )

@@ -1,135 +1,141 @@
-import { useNavigate } from 'react-router-dom'
-import { ShopContext } from '../Context/ShopContext.jsx'
-import { useContext, useState } from 'react'
-import { FaCcMastercard, FaCcPaypal, FaCcVisa } from 'react-icons/fa' // Icônes de paiement
+import { useState } from 'react'
+import Modal from './Modal'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+  faCcVisa,
+  faCcMastercard,
+  faCcPaypal,
+} from '@fortawesome/free-brands-svg-icons'
+
+// Définir des couleurs pour les icônes actives et inactives
+const activeColor = '#1565c0' // Bleu par exemple
+const inactiveColor = '#ccc' // Gris pour les icônes inactives
+
+// Dans votre composant PaymentPage, utilisez FontAwesomeIcon pour afficher les icônes
 
 const PaymentPage = () => {
-  const navigate = useNavigate()
-  const { getTotalCartAmount } = useContext(ShopContext)
-  const [customerInfo, setCustomerInfo] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
+  const [isTransactionSuccessful, setIsTransactionSuccessful] = useState(false)
+  const [paymentMethod, setPaymentMethod] = useState('card') // 'card' ou 'paypal'
+  // États pour les informations de carte
+  const [cardInfo, setCardInfo] = useState({
     cardNumber: '',
     expiryDate: '',
-    cvc: '',
-    paymentMethod: 'card', // 'card' ou 'paypal'
+    cvv: '',
   })
 
   const handleInputChange = (e) => {
-    setCustomerInfo({ ...customerInfo, [e.target.name]: e.target.value })
+    const { name, value } = e.target
+    setCardInfo((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }))
   }
 
-  const handlePayment = () => {
-    // Logique pour traiter le paiement, e.g., intégration avec Stripe ou PayPal
-    console.log(
-      'Traitement du paiement avec les informations suivantes:',
-      customerInfo,
-    )
-
-    // Après le traitement du paiement, rediriger l'utilisateur
-    navigate('/success') // Modifier '/success' par la route de succès de paiement que vous voulez
+  const handlePayment = async (e) => {
+    e.preventDefault()
+    if (paymentMethod === 'paypal') {
+      console.log('Redirection vers PayPal...')
+      // window.location.href = "URL_PAYPAL";
+    } else {
+      console.log('Traitement du paiement par carte...', cardInfo)
+      setIsTransactionSuccessful(true) // Simuler un succès de paiement
+    }
   }
 
   return (
     <div className="payment-page">
-      <div>
-        <h1>Payment Details</h1>
-        <div className="payment-form">
-          {/* Informations personnelles */}
-          <input
-            type="text"
-            name="firstName"
-            value={customerInfo.firstName}
-            onChange={handleInputChange}
-            placeholder="First Name"
-          />
-          <input
-            type="text"
-            name="lastName"
-            value={customerInfo.lastName}
-            onChange={handleInputChange}
-            placeholder="Last Name"
-          />
-          <input
-            type="email"
-            name="email"
-            value={customerInfo.email}
-            onChange={handleInputChange}
-            placeholder="Email"
-          />
-
-          {/* Choix du mode de paiement */}
-          <div className="payment-method">
-            <div
-              className="payment-method-option"
-              onClick={() =>
-                setCustomerInfo({ ...customerInfo, paymentMethod: 'card' })
-              }
-            >
-              <FaCcVisa
-                size={24}
-                color={
-                  customerInfo.paymentMethod === 'card' ? '#6772E5' : '#ccc'
-                }
-              />
-              <FaCcMastercard
-                size={24}
-                color={
-                  customerInfo.paymentMethod === 'card' ? '#6772E5' : '#ccc'
-                }
-              />
-              <span>Card</span>
-            </div>
-            <div
-              className="payment-method-option"
-              onClick={() =>
-                setCustomerInfo({ ...customerInfo, paymentMethod: 'paypal' })
-              }
-            >
-              <FaCcPaypal
-                size={24}
-                color={
-                  customerInfo.paymentMethod === 'paypal' ? '#6772E5' : '#ccc'
-                }
-              />
-              <span>PayPal</span>
-            </div>
-          </div>
-
-          {/* Si la méthode de paiement sélectionnée est 'card', montrer le formulaire de carte */}
-          {customerInfo.paymentMethod === 'card' && (
-            <>
-              <input
-                type="text"
-                name="cardNumber"
-                value={customerInfo.cardNumber}
-                onChange={handleInputChange}
-                placeholder="Card Number"
-              />
-              <input
-                type="text"
-                name="expiryDate"
-                value={customerInfo.expiryDate}
-                onChange={handleInputChange}
-                placeholder="MM/YY"
-              />
-              <input
-                type="text"
-                name="cvc"
-                value={customerInfo.cvc}
-                onChange={handleInputChange}
-                placeholder="CVC"
-              />
-            </>
-          )}
-
-          <div className="total-amount">
-            <p>Total Amount: ${getTotalCartAmount()}</p>
-          </div>
-          <button onClick={handlePayment}>Pay Now</button>
+      <h1>Page de Paiement</h1>
+      <form className="payment-form" onSubmit={handlePayment}>
+        <div className="payment-method">
+          <label>
+            <input
+              type="radio"
+              name="paymentMethod"
+              value="card"
+              checked={paymentMethod === 'card'}
+              onChange={() => setPaymentMethod('card')}
+            />
+            Carte
+            <FontAwesomeIcon
+              icon={faCcVisa}
+              color={paymentMethod === 'card' ? activeColor : inactiveColor}
+            />
+            <FontAwesomeIcon
+              icon={faCcMastercard}
+              color={paymentMethod === 'card' ? activeColor : inactiveColor}
+            />
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="paymentMethod"
+              value="paypal"
+              checked={paymentMethod === 'paypal'}
+              onChange={() => setPaymentMethod('paypal')}
+            />
+            PayPal
+            <FontAwesomeIcon
+              icon={faCcPaypal}
+              color={paymentMethod === 'paypal' ? activeColor : inactiveColor}
+            />
+          </label>
         </div>
-      </div>
+
+        {paymentMethod === 'card' && (
+          <div className="card-details">
+            <label htmlFor="cardNumber">Numéro de carte:</label>
+            <input
+              type="text"
+              id="cardNumber"
+              name="cardNumber"
+              value={cardInfo.cardNumber}
+              onChange={handleInputChange}
+              required
+            />
+
+            <label htmlFor="expiryDate">Date d`&apos`expiration:</label>
+            <input
+              type="text"
+              id="expiryDate"
+              name="expiryDate"
+              value={cardInfo.expiryDate}
+              onChange={handleInputChange}
+              required
+              placeholder="MM/AA"
+            />
+
+            <label htmlFor="cvv">CVV:</label>
+            <input
+              type="text"
+              id="cvv"
+              name="cvv"
+              value={cardInfo.cvv}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+        )}
+
+        <button type="submit">
+          <a
+            href="https://www.paypal.com/signin?returnUri=https%3A%2F%2Fwww.paypal.com%2Fmyaccount%2Fsummary&state="
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Effectuer le paiement
+          </a>
+        </button>
+      </form>
+
+      {isTransactionSuccessful && (
+        <Modal onClose={() => setIsTransactionSuccessful(false)}>
+          <h2>Achat réussi !</h2>
+          <p>Votre commande a été traitée avec succès.</p>
+          <button onClick={() => setIsTransactionSuccessful(false)}>
+            Fermer
+          </button>
+        </Modal>
+      )}
     </div>
   )
 }

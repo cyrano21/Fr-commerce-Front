@@ -1,22 +1,49 @@
-import cross_icon from '../assets/cart_cross_icon.png'
-import { useNavigate } from 'react-router-dom'
-import { ShopContext } from '../Context/ShopContext.jsx'
 import { useContext } from 'react'
+import axios from 'axios' // Utilisez axiosInstance si vous avez une configuration spécifique
+import { ShopContext } from '../Context/ShopContext.jsx'
+import { useNavigate } from 'react-router-dom'
+
+import cross_icon from '../assets/cart_cross_icon.png' // Assurez-vous que le chemin est correct
+const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL
 
 const CartItems = () => {
   const navigate = useNavigate()
-
-  const { products } = useContext(ShopContext)
   const {
     cartItems,
     removeFromCart,
     getTotalCartAmount,
     increaseQuantity,
     decreaseQuantity,
+    setCartItems,
+    getDefaultCart,
+    products,
   } = useContext(ShopContext)
 
-  const handleCheckout = () => {
-    navigate('/payment')
+  const handleCheckout = async () => {
+    const saleItems = products
+      .filter((product) => cartItems[product.id] > 0)
+      .map((product) => ({
+        productId: product._id,
+        quantity: cartItems[product.id],
+        price: product.new_price,
+      }))
+
+    try {
+      axios.post(
+        `${backendUrl}/completePurchase`,
+        { items: saleItems },
+        {
+          headers: {
+            'auth-token': localStorage.getItem('auth-token'),
+          },
+        },
+      )
+
+      setCartItems(getDefaultCart()) // Réinitialiser le panier
+      navigate('/payment') // Rediriger vers la page de paiement avec indication de succès
+    } catch (error) {
+      console.error("Erreur lors de la finalisation de l'achat:", error)
+    }
   }
 
   return (
@@ -31,39 +58,31 @@ const CartItems = () => {
       </div>
       <hr />
       <div className="cartitems-list">
-        {products.map((e) => {
-          if (cartItems[e.id] > 0) {
-            return (
-              <div key={e.id}>
-                <div key={e.id} className="cartitems-format">
-                  <img
-                    className="cartitems-product-icon"
-                    src={e.image}
-                    alt=""
-                  />
-                  <p className="cartitems-product-title">{e.name}</p>
-                  <p>${e.new_price}</p>
-                  <div className="cartitems-quantity">
-                    <button onClick={() => decreaseQuantity(e.id)}>-</button>
-                    <span>{cartItems[e.id]}</span>
-                    <button onClick={() => increaseQuantity(e.id)}>+</button>
-                  </div>
-                  <p>${e.new_price * cartItems[e.id]}</p>
-                  <img
-                    onClick={() => {
-                      removeFromCart(e.id)
-                    }}
-                    className="cartitems-remove-icon"
-                    src={cross_icon}
-                    alt=""
-                  />
-                </div>
-                <hr />
+        {products
+          .filter((product) => cartItems[product.id] > 0)
+          .map((product) => (
+            <div key={product.id} className="cartitems-format">
+              <img
+                className="cartitems-product-icon"
+                src={product.image}
+                alt=""
+              />
+              <p className="cartitems-product-title">{product.name}</p>
+              <p>${product.new_price}</p>
+              <div className="cartitems-quantity">
+                <button onClick={() => decreaseQuantity(product.id)}>-</button>
+                <span>{cartItems[product.id]}</span>
+                <button onClick={() => increaseQuantity(product.id)}>+</button>
               </div>
-            )
-          }
-          return null
-        })}
+              <p>${product.new_price * cartItems[product.id]}</p>
+              <img
+                onClick={() => removeFromCart(product.id)}
+                className="cartitems-remove-icon"
+                src={cross_icon}
+                alt="remove"
+              />
+            </div>
+          ))}
       </div>
 
       <div className="cartitems-down">

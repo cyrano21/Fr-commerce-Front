@@ -11,8 +11,8 @@ const ShopCategory = ({ banner, category }) => {
       const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL
       const { data } = await axios.get(`${backendUrl}/allproducts`)
 
-      console.log('data>>>', data)
-      const filteredProducts = data.filter(
+      console.log('data.products>>>', data.products)
+      const filteredProducts = data.products.filter(
         (product) =>
           product.category.charAt(0).toUpperCase() +
             product.category.slice(1).toLowerCase() ===

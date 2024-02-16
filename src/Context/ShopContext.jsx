@@ -30,7 +30,7 @@ const ShopContextProvider = (props) => {
   useEffect(() => {
     fetch(`${backendUrl}/allproducts`)
       .then((res) => res.json())
-      .then((data) => setProducts(data))
+      .then((data) => setProducts(data.products))
 
     if (localStorage.getItem('auth-token')) {
       fetch(`${backendUrl}/getcart`, {

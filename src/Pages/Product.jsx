@@ -10,7 +10,9 @@ import { useContext } from 'react'
 const Product = () => {
   const { products } = useContext(ShopContext)
   const { productId } = useParams()
-  const product = products.find((e) => e.id === Number(productId))
+  const product = Array.isArray(products)
+    ? products.find((e) => e.id === Number(productId))
+    : undefined
 
   // Afficher un spinner de chargement ou un message si le produit n'est pas trouvé
   if (!product) {

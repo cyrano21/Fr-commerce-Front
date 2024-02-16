@@ -6,29 +6,27 @@ import { Link } from 'react-router-dom'
 
 const ShopCategory = ({ banner, category }) => {
   const [products, setProducts] = useState([])
+  const fetchProducts = async () => {
+    try {
+      const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL
+      const { data } = await axios.get(`${backendUrl}/allproducts`)
+
+      console.log('data>>>', data)
+      const filteredProducts = data.filter(
+        (product) =>
+          product.category.charAt(0).toUpperCase() +
+            product.category.slice(1).toLowerCase() ===
+          category,
+      )
+
+      console.log('filteredProducts', filteredProducts)
+      setProducts(filteredProducts)
+    } catch (error) {
+      console.error('Erreur lors de la récupération des produits:', error)
+    }
+  }
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL
-        const { data } = await axios.get(`${backendUrl}/allproducts`)
-        // Filtrer les produits par catégorie en respectant la casse
-
-        console.log('data>>>', data)
-        const filteredProducts = data.filter(
-          (product) =>
-            product.category.charAt(0).toUpperCase() +
-              product.category.slice(1).toLowerCase() ===
-            category,
-        )
-
-        console.log('filteredProducts', filteredProducts)
-        setProducts(filteredProducts)
-      } catch (error) {
-        console.error('Erreur lors de la récupération des produits:', error)
-      }
-    }
-
     fetchProducts()
   }, [category])
 

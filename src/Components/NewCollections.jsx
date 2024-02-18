@@ -1,27 +1,24 @@
 import Item from './Item'
-import new_collection from '../assets/new_collections'
-import axios from "axios";
-import {useState} from "react";
-
+import axios from 'axios'
+import { useState } from 'react'
 
 const NewCollections = () => {
+  const [newCollection, setNewCollection] = useState([])
 
-    const [newCollection, setNewCollection] = useState([])
-
-    const handleNewCollection = async () => {
-        try{
-            const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL
-            const response = await axios(`${backendUrl}/new_collection`)
-               console.log('newCollection>>>', response.data)
-            setNewCollection(response.data)}
-     catch (error) {
-        console.error('Erreur lors de la récupération des produits:', error)
+  const handleNewCollection = async () => {
+    try {
+      const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL
+      const response = await axios(`${backendUrl}/new_collection`)
+      console.log('newCollection>>>', response.data)
+      setNewCollection(response.data)
+    } catch (error) {
+      console.error('Erreur lors de la récupération des produits:', error)
     }
+  }
 
-    useState(() => {
-        handleNewCollection()
-    }, [])
-
+  useState(() => {
+    handleNewCollection()
+  }, [])
 
   return (
     <div className="new-collections">
@@ -44,4 +41,5 @@ const NewCollections = () => {
     </div>
   )
 }
+
 export default NewCollections

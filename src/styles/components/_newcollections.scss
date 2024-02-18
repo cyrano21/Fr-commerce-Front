@@ -20,58 +20,44 @@
 
   .collections {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: repeat(4, 1fr);
     margin-top: 50px;
     gap: 30px;
   }
 
-  @media (max-width: 1280px) {
-    h1 {
+  // Utilisation de mixins pour les médias queries
+  @mixin responsive($size) {
+    @if $size == medium {
       font-size: 40px;
+      hr { width: 160px; height: 4px; }
+      .collections { gap: 20px; margin-top: 30px; }
+    } @else if $size == small {
+      font-size: 30px;
+      hr { width: 120px; height: 3px; }
+      .collections { gap: 15px; margin-top: 20px; }
+    } @else if $size == extra-small {
+      gap: 6px;
+      font-size: 20px;
+      hr { width: 100px; }
+      .collections { gap: 5px; }
     }
-    hr {
-      width: 160px;
-      height: 4px;
-    }
-    .collections {
-      gap: 20px;
-      margin-top: 30px;
-    }
+  }
+
+  @media (max-width: 1280px) {
+    @include responsive(medium);
   }
 
   @media (max-width: 1024px) {
-    h1 {
-      font-size: 30px;
-    }
-    hr {
-      width: 120px;
-      height: 3px;
-    }
-    .collections {
-      gap: 15px;
-      margin-top: 20px;
-    }
+    @include responsive(small);
   }
 
   @media (max-width: 800px) {
-    gap: 6px;
-
-    h1 {
-      font-size: 20px;
-    }
-    hr {
-      width: 100px;
-    }
-    .collections {
-      gap: 5px;
-    }
+    @include responsive(extra-small);
   }
 
-  @media(max-width: 500px) {
+  @media (max-width: 500px) {
     .collections {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
+      grid-template-columns: repeat(2, 1fr);
     }
   }
 }

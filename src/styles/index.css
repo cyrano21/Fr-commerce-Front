@@ -650,12 +650,12 @@ code {
 }
 .new-collections .collections {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: repeat(4, 1fr);
   margin-top: 50px;
   gap: 30px;
 }
 @media (max-width: 1280px) {
-  .new-collections h1 {
+  .new-collections {
     font-size: 40px;
   }
   .new-collections hr {
@@ -668,7 +668,7 @@ code {
   }
 }
 @media (max-width: 1024px) {
-  .new-collections h1 {
+  .new-collections {
     font-size: 30px;
   }
   .new-collections hr {
@@ -683,8 +683,6 @@ code {
 @media (max-width: 800px) {
   .new-collections {
     gap: 6px;
-  }
-  .new-collections h1 {
     font-size: 20px;
   }
   .new-collections hr {
@@ -696,9 +694,7 @@ code {
 }
 @media (max-width: 500px) {
   .new-collections .collections {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 

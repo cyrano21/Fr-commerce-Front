@@ -1,10 +1,11 @@
 import Item from './Item'
 import axios from 'axios'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const NewCollections = () => {
   const [newCollection, setNewCollection] = useState([])
-
+  const [currentPage, setCurrentPage] = useState(1)
+  const [productsPerPage, setProductsPerPage] = useState(5)
   const handleNewCollection = async () => {
     try {
       const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL
@@ -16,27 +17,36 @@ const NewCollections = () => {
     }
   }
 
-  useState(() => {
+  useEffect(() => {
     handleNewCollection()
   }, [])
+
+  const indexOfLastProduct = currentPage * productsPerPage
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage
+  const currentProducts = newCollection.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct,
+  )
+
+  const totalPages = Math.ceil(newCollection.length / productsPerPage)
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
   return (
     <div className="new-collections">
       <h1>NOUVELLES COLLECTIONS</h1>
       <hr />
       <div className="collections">
-        {newCollection.map((item, i) => {
-          return (
-            <Item
-              key={i}
-              id={item.id}
-              name={item.name}
-              image={item.image}
-              new_price={item.new_price}
-              old_price={item.old_price}
-            />
-          )
-        })}
+        {currentProducts.map((item, i) => (
+          <Item key={i} {...item} />
+        ))}
+      </div>
+      <div className="pagination">
+        {[...Array(totalPages).keys()].map((number) => (
+          <button key={number + 1} onClick={() => paginate(number + 1)}>
+            {number + 1}
+          </button>
+        ))}
       </div>
     </div>
   )

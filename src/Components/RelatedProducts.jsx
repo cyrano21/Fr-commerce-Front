@@ -1,4 +1,4 @@
-import data_product from '../assets/data.js'
+import data_product from '../../../E-commerce-Back/data.js'
 import Item from './Item.jsx'
 
 const RelatedProducts = () => {

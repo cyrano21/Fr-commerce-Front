@@ -1,10 +1,11 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import Item from './Item.jsx'
+import { useParams } from 'react-router-dom'
 
-const RelatedProducts = ({ productId }) => {
-  console.log('productId by prop>>>', productId)
+const RelatedProducts = () => {
   const [relatedProducts, setRelatedProducts] = useState([])
+  const { productId } = useParams()
 
   useEffect(() => {
     const fetchRelatedProducts = async () => {

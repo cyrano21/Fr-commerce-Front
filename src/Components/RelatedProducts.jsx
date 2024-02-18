@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import Item from './Item.jsx'
 
 const RelatedProducts = ({ productId }) => {
+  console.log('productId by prop>>>', productId)
   const [relatedProducts, setRelatedProducts] = useState([])
 
   useEffect(() => {
@@ -12,6 +13,7 @@ const RelatedProducts = ({ productId }) => {
         const { data } = await axios.get(
           `${backendUrl}/relatedproducts/${productId}`,
         )
+        console.log('data fetchRelatedProducts>>>', data)
         setRelatedProducts(data)
       } catch (error) {
         console.error(

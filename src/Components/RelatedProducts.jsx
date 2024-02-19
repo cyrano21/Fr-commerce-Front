@@ -7,28 +7,31 @@ const RelatedProducts = () => {
   const [relatedProducts, setRelatedProducts] = useState([])
   const { productId } = useParams()
 
+  const fetchRelatedProducts = async () => {
+    try {
+      const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL
+      // Utiliser `productId` dans l'URL de la requête
+      const { data } = await axios.get(
+        `${backendUrl}/relatedproducts/${productId}`,
+      )
+
+      console.log('data fetchRelatedProducts >>>', data._id)
+      setRelatedProducts(data)
+
+      const relatedUrl = `/api/related-products/${data._id}`
+      const relatedResponse = await axios.get(relatedUrl)
+
+      console.log('relatedResponse>>>', relatedResponse.data)
+      setRelatedProducts(relatedResponse.data)
+    } catch (error) {
+      console.error(
+        'Erreur lors de la récupération des produits associés:',
+        error,
+      )
+    }
+  }
   useEffect(() => {
-    const fetchRelatedProducts = async () => {
-      try {
-        const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL
-        // Utiliser `productId` dans l'URL de la requête
-        const { data } = await axios.get(
-          `${backendUrl}/relatedproducts/${productId}`,
-        )
-
-        console.log('data fetchRelatedProducts >>>', data)
-        setRelatedProducts(data)
-      } catch (error) {
-        console.error(
-          'Erreur lors de la récupération des produits associés:',
-          error,
-        )
-      }
-    }
-
-    if (productId) {
-      fetchRelatedProducts()
-    }
+    fetchRelatedProducts()
   }, [productId])
 
   return (

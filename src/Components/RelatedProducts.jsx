@@ -23,9 +23,7 @@ const RelatedProducts = ({ productId }) => {
     }
   }
   useEffect(() => {
-    if (productId) {
-      fetchRelatedProducts()
-    }
+    fetchRelatedProducts()
   }, [productId])
 
   return (

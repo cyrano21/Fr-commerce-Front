@@ -4,6 +4,7 @@ import star_dull_icon from '../assets/star_dull_icon.png'
 import { ShopContext } from '../Context/ShopContext.jsx'
 import star_icon from '../assets/star_icon.png'
 import Modal from './Modal.jsx'
+import RelatedProducts from './RelatedProducts.jsx'
 
 const ProductDisplay = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -82,6 +83,7 @@ const ProductDisplay = (props) => {
           <button onClick={() => setIsModalOpen(false)}></button>
         </Modal>
       )}
+      <RelatedProducts productId={product._id} />
     </div>
   )
 }

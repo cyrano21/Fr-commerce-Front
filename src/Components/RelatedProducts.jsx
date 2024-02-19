@@ -1,11 +1,9 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import Item from './Item.jsx'
-import { useParams } from 'react-router-dom'
 
-const RelatedProducts = () => {
+const RelatedProducts = ({ productId }) => {
   const [relatedProducts, setRelatedProducts] = useState([])
-  const { productId } = useParams()
 
   const fetchRelatedProducts = async () => {
     try {
@@ -15,14 +13,8 @@ const RelatedProducts = () => {
         `${backendUrl}/relatedproducts/${productId}`,
       )
 
-      console.log('data fetchRelatedProducts >>>', data._id)
+      console.log('data fetchRelatedProducts >>>', data)
       setRelatedProducts(data)
-
-      const relatedUrl = `/api/related-products/${data._id}`
-      const relatedResponse = await axios.get(relatedUrl)
-
-      console.log('relatedResponse>>>', relatedResponse.data)
-      setRelatedProducts(relatedResponse.data)
     } catch (error) {
       console.error(
         'Erreur lors de la récupération des produits associés:',
@@ -31,7 +23,9 @@ const RelatedProducts = () => {
     }
   }
   useEffect(() => {
-    fetchRelatedProducts()
+    if (productId) {
+      fetchRelatedProducts()
+    }
   }, [productId])
 
   return (

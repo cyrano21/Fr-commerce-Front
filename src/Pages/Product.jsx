@@ -10,9 +10,8 @@ import { useContext } from 'react'
 const Product = () => {
   const { products } = useContext(ShopContext)
   const { productId } = useParams()
-  const product = Array.isArray(products)
-    ? products.find((e) => e.id === Number(productId))
-    : undefined
+
+  const product = products.find((p) => p._id === productId)
 
   // Afficher un spinner de chargement ou un message si le produit n'est pas trouvé
   if (!product) {
@@ -24,7 +23,7 @@ const Product = () => {
       <Breadcrums product={product} />
       <ProductDisplay product={product} />
       <DescriptionBox />
-      <RelatedProducts productId={productId} />
+      <RelatedProducts productId={product._id} />
     </div>
   )
 }

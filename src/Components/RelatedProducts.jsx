@@ -11,6 +11,7 @@ const RelatedProducts = () => {
     const fetchRelatedProducts = async () => {
       try {
         const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL
+        // Utiliser `productId` dans l'URL de la requête
         const { data } = await axios.get(
           `${backendUrl}/relatedproducts/${productId}`,
         )
@@ -24,7 +25,9 @@ const RelatedProducts = () => {
       }
     }
 
-    fetchRelatedProducts()
+    if (productId) {
+      fetchRelatedProducts()
+    }
   }, [productId])
 
   return (

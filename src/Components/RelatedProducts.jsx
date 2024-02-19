@@ -15,7 +15,8 @@ const RelatedProducts = () => {
         const { data } = await axios.get(
           `${backendUrl}/relatedproducts/${productId}`,
         )
-        console.log('data fetchRelatedProducts>>>', data)
+
+        console.log('data fetchRelatedProducts >>>', data)
         setRelatedProducts(data)
       } catch (error) {
         console.error(

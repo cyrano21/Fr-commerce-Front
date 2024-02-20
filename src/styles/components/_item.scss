@@ -1,26 +1,32 @@
 .item {
-  margin: 10px; // Ajoutez un peu de marge autour de chaque .item pour l'espacement
-  box-sizing: border-box; // Assurez-vous que la marge et le padding sont inclus dans la largeur définie
+  margin: 10px;
+  box-sizing: border-box;
+
+  img {
+    width: 100%;
+  }
 
   p {
     margin: 6px 0;
+    color: #374151;
+    font-size: 16px; // Taille initiale, ajustez selon vos besoins
+    font-weight: 600;
   }
 
   .item-prices {
     display: flex;
-    gap: 20px; // Vous aviez déjà un espacement ici, ce qui est bien
+    gap: 20px;
 
     .item-price-new,
     .item-price-old {
-      // Simplification pour les deux classes
       color: #374151;
       font-size: 18px;
       font-weight: 600;
-      text-decoration: none; // Assurez-vous que le nouveau prix n'a pas de décoration
+      text-decoration: none;
 
       &.item-price-old {
         font-weight: 500;
-        text-decoration: line-through; // Seulement l'ancien prix est barré
+        text-decoration: line-through;
       }
     }
   }
@@ -30,56 +36,37 @@
     transition: 0.6s;
   }
 
-  // Réglages pour les différentes tailles d'écran
   @media (max-width: 1280px) {
-    width: 220px;
-
-    img {
-      width: 100%; // Faites que l'image prenne toute la largeur de .item
-    }
-
     .item-price-new,
-    .item-price-old {
+    .item-price-old,
+    p {
       font-size: 14px;
     }
   }
 
   @media (max-width: 1024px) {
-    width: 170px;
-
-    img {
-      width: 100%;
-    }
-
     .item-price-new,
-    .item-price-old {
+    .item-price-old,
+    p {
       font-size: 13px;
     }
   }
 
   @media (max-width: 800px) {
-    width: 120px;
-
-    img {
-      width: 100%;
-    }
-
     .item-price-new,
-    .item-price-old {
+    .item-price-old,
+    p {
       font-size: 12px;
     }
   }
 
   @media (max-width: 500px) {
-    width: 160px;
+    width: 100%; // Ajustez selon la mise en page souhaitée
 
-    img {
-      width: 100%;
-    }
-    .item{
-      p, div{
-        font-size: 10px;
-      }
+    .item-price-new,
+    .item-price-old,
+    p {
+      font-size: 10px; // Réduisez la taille pour les petits écrans
     }
   }
 }

@@ -363,8 +363,14 @@ code {
   margin: 10px;
   box-sizing: border-box;
 }
+.item img {
+  width: 100%;
+}
 .item p {
   margin: 6px 0;
+  color: #374151;
+  font-size: 16px;
+  font-weight: 600;
 }
 .item .item-prices {
   display: flex;
@@ -387,49 +393,33 @@ code {
   transition: 0.6s;
 }
 @media (max-width: 1280px) {
-  .item {
-    width: 220px;
-  }
-  .item img {
-    width: 100%;
-  }
   .item .item-price-new,
-  .item .item-price-old {
+  .item .item-price-old,
+  .item p {
     font-size: 14px;
   }
 }
 @media (max-width: 1024px) {
-  .item {
-    width: 170px;
-  }
-  .item img {
-    width: 100%;
-  }
   .item .item-price-new,
-  .item .item-price-old {
+  .item .item-price-old,
+  .item p {
     font-size: 13px;
   }
 }
 @media (max-width: 800px) {
-  .item {
-    width: 120px;
-  }
-  .item img {
-    width: 100%;
-  }
   .item .item-price-new,
-  .item .item-price-old {
+  .item .item-price-old,
+  .item p {
     font-size: 12px;
   }
 }
 @media (max-width: 500px) {
   .item {
-    width: 160px;
-  }
-  .item img {
     width: 100%;
   }
-  .item .item p, .item .item div {
+  .item .item-price-new,
+  .item .item-price-old,
+  .item p {
     font-size: 10px;
   }
 }
@@ -720,9 +710,6 @@ code {
 @media (max-width: 500px) {
   .new-collections .collections {
     grid-template-columns: repeat(2, 1fr);
-  }
-  .new-collections .collections .item p, .new-collections .collections .item div {
-    font-size: 10px;
   }
 }
 

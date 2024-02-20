@@ -26,7 +26,11 @@
 
     .shopcategory-items {
         display: flex;
-
+        flex-wrap: wrap;
+        justify-content: space-between;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 15px;
 
         .shopcategory-items-container {
             min-width: 180px;

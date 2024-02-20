@@ -9,7 +9,7 @@ const NewCollections = () => {
   const handleNewCollection = async () => {
     try {
       const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL
-      const response = await axios(`${backendUrl}/new_collection`)
+      const response = await axios(`${backendUrl}/newcollections`)
       console.log('newCollection>>>', response.data)
       setNewCollection(response.data)
     } catch (error) {

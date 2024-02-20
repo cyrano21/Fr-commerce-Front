@@ -1,33 +1,51 @@
-import Breadcrums from '../Components/Breadcrums.jsx'
-import ProductDisplay from '../Components/ProductDisplay.jsx'
-import DescriptionBox from '../Components/DescriptionBox.jsx'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
 import RelatedProducts from '../Components/RelatedProducts.jsx'
-import { useParams } from 'react-router-dom'
-import { ShopContext } from '../Context/ShopContext'
-import { useContext, useMemo } from 'react'
+import ProductDisplay from '../Components/ProductDisplay.jsx'
+import Breadcrumbs from '../Components/Breadcrumbs.jsx'
+import DescriptionBox from '../Components/DescriptionBox.jsx'
 
-// export default Product
-const Product = () => {
-  const { products } = useContext(ShopContext)
-  const { _id } = useParams()
-  const product = useMemo(
-    () => products.find((p) => p._id === _id),
-    [products, _id],
+const ProductPage = () => {
+  const [products, setProducts] = useState([])
+  const [selectedProductId, setSelectedProductId] = useState(null)
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const backendUrl =
+        import.meta.env.VITE_REACT_APP_BACKEND_URL || 'http://localhost:5000'
+      try {
+        const { data } = await axios.get(`${backendUrl}/allproducts`)
+        setProducts(data.products)
+        // Exemple : Sélectionnez le premier produit par défaut ou basé sur une certaine logique
+        if (data.products.length > 0) {
+          setSelectedProductId(data.products[0]._id)
+        }
+      } catch (error) {
+        console.error('Erreur lors de la récupération des produits', error)
+      }
+    }
+
+    fetchProducts()
+  }, [])
+
+  // Trouvez le produit sélectionné basé sur selectedProductId
+  const selectedProduct = products.find(
+    (product) => product._id === selectedProductId,
   )
 
-  // Afficher un spinner de chargement ou un message si le produit n'est pas trouvé
-  if (!product) {
-    return <div>Chargement du produit...</div> // ou un spinner de chargement
+  if (!selectedProduct) {
+    return <div>Chargement...</div>
   }
 
   return (
     <div>
-      <Breadcrums product={product} />
-      <ProductDisplay product={product} />
+      <Breadcrumbs product={selectedProduct} />
+      <ProductDisplay product={selectedProduct} />
       <DescriptionBox />
-      <RelatedProducts productId={product._id} />
+      {/* Passez l'_id du produit sélectionné en props */}
+      <RelatedProducts productId={selectedProductId} />
     </div>
   )
 }
 
-export default Product
+export default ProductPage

@@ -14,6 +14,13 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
+@media (max-width: 500px) {
+  .slick-prev, .slick-next {
+    left: 10px;
+    right: 10px;
+  }
+}
+
 .nav {
   display: flex;
   justify-content: space-around;
@@ -334,23 +341,21 @@ code {
 @media (max-width: 500px) {
   .hero {
     flex-direction: column;
+    align-items: center;
+  }
+  .hero .hero-left {
+    padding: 20px;
+    text-align: center;
+  }
+  .hero .hero-left h2, .hero .hero-left p {
+    font-size: adjust;
+  }
+  .hero .hero-left .hero-latest-btn {
+    width: auto;
+    padding: 10px 20px;
   }
   .hero .hero-right {
     display: none;
-  }
-  .hero .hero-left h2 {
-    font-size: 18px;
-  }
-  .hero .hero-left p {
-    font-size: 50px;
-  }
-  .hero .hero-left .hero-hand-icon img {
-    width: 55px;
-  }
-  .hero .hero-left .hero-latest-btn {
-    width: 200px;
-    height: 45px;
-    font-size: 14px;
   }
 }
 
@@ -511,12 +516,9 @@ code {
   }
 }
 @media (max-width: 500px) {
-  .popular {
-    height: 90vh;
-  }
-  .popular .popular-item {
+  .item-container, .popular-item {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 20px;
   }
 }
@@ -690,6 +692,9 @@ code {
   }
   .new-collections .collections {
     gap: 5px;
+  }
+  .new-collections h1 {
+    font-size: 20px;
   }
 }
 @media (max-width: 500px) {

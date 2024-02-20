@@ -15,3 +15,10 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.slick-prev, .slick-next {
+  @media (max-width: 500px) {
+    left: 10px; // Ajustez la position pour qu'elle soit visible sans chevaucher le contenu
+    right: 10px;
+  }
+}

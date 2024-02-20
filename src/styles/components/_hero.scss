@@ -156,29 +156,24 @@
 
   @media (max-width: 500px) {
     flex-direction: column;
-
-    .hero-right {
-      display: none;
-    }
+    align-items: center;
 
     .hero-left {
-      h2 {
-        font-size: 18px;
-      }
+      padding: 20px;
+      text-align: center;
 
-      p {
-        font-size: 50px;
-      }
-
-      .hero-hand-icon img {
-        width: 55px;
+      h2, p {
+        font-size: adjust;
       }
 
       .hero-latest-btn {
-        width: 200px;
-        height: 45px;
-        font-size: 14px;
+        width: auto;
+        padding: 10px 20px;
       }
+    }
+
+    .hero-right {
+      display: none; // Cache cette section sur petits écrans si non nécessaire
     }
   }
 }

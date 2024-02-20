@@ -53,6 +53,9 @@
 
   @media (max-width: 800px) {
     @include responsive(extra-small);
+    h1 {
+      font-size: 20px;
+    }
   }
 
   @media (max-width: 500px) {
@@ -61,3 +64,6 @@
     }
   }
 }
+
+
+

@@ -50,10 +50,12 @@ const ShopCategory = ({ banner, category }) => {
       <div className="shopcategory-indexSort">
         {/* Index and Sorting Elements Here */}
       </div>
-      <div className="shopcategory-items-container">
-        {products.map((product, index) => (
-          <Item key={index} {...product} />
-        ))}
+      <div className="shopcategory-items">
+        <div className="shopcategory-items-container">
+          {products.map((product, index) => (
+            <Item key={index} {...product} />
+          ))}
+        </div>
       </div>
       {/* Contrôles de pagination ici */}
       <div className="pagination">

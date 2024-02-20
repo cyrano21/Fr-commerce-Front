@@ -1746,7 +1746,10 @@ code {
   border-radius: 40px;
   border: 1px solid #888;
 }
-.shopcategory .shopcategory-items-container {
+.shopcategory .shopcategory-items {
+  display: flex;
+}
+.shopcategory .shopcategory-items .shopcategory-items-container {
   min-width: 180px;
   max-width: 280px;
   flex: 1 0 20%;

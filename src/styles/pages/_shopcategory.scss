@@ -24,16 +24,21 @@
     }
   }
 
-  .shopcategory-items-container {
-    min-width: 180px;
-    max-width: 280px;
-    flex: 1 0 20%;
-    margin: 5px;
-    padding: 10px;
-    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
-    border-radius: 15px;
-  }
+    .shopcategory-items {
+        display: flex;
+
+
+        .shopcategory-items-container {
+            min-width: 180px;
+            max-width: 280px;
+            flex: 1 0 20%;
+            margin: 5px;
+            padding: 10px;
+            font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+            "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+            border-radius: 15px;
+        }
+    }
 
   .pagination {
     display: flex;

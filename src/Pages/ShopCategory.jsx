@@ -14,32 +14,21 @@ const ShopCategory = ({ banner, category }) => {
         const { data } = await axios.get(`${backendUrl}/allproducts`, {
           params: {
             category: category,
-            page: currentPage, // Ajout du paramètre de page pour la requête
-            limit: 12, // Vous pouvez ajuster cette valeur selon vos besoins
+            page: currentPage,
+            limit: 12,
           },
         })
 
-        console.log(
-          'Produits récupérés pour la catégorie:',
-          category,
-          data.products,
-        )
         setProducts(data.products)
-        setTotalPages(data.totalPages) // Mettre à jour le nombre total de pages basé sur la réponse
+        setTotalPages(data.totalPages)
       } catch (error) {
-        console.error(
-          'Erreur lors de la récupération des produits pour la catégorie',
-          category,
-          ':',
-          error,
-        )
+        console.error('Error fetching products:', error)
       }
     }
 
     fetchProducts()
-  }, [category, currentPage]) // Dépend de `category` et `currentPage` pour refaire une requête quand ils changent
+  }, [category, currentPage])
 
-  // Fonction pour gérer le changement de page
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage)
   }
@@ -51,13 +40,10 @@ const ShopCategory = ({ banner, category }) => {
         {/* Index and Sorting Elements Here */}
       </div>
       <div className="shopcategory-items">
-        <div className="shopcategory-items-container">
-          {products.map((product, index) => (
-            <Item key={index} {...product} />
-          ))}
-        </div>
+        {products.map((product, index) => (
+          <Item key={index} {...product} />
+        ))}
       </div>
-      {/* Contrôles de pagination ici */}
       <div className="pagination">
         {Array.from({ length: totalPages }, (_, index) => (
           <button
@@ -72,4 +58,5 @@ const ShopCategory = ({ banner, category }) => {
     </div>
   )
 }
+
 export default ShopCategory

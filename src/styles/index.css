@@ -1738,30 +1738,12 @@ code {
   max-width: 1200px;
   padding: 0 15px;
 }
-.shopcategory .shopcategory-indexSort p span {
-  font-weight: 600;
-}
-.shopcategory .shopcategory-indexSort .shopcategory-sort {
-  padding: 10px 20px;
-  border-radius: 40px;
-  border: 1px solid #888;
-}
 .shopcategory .shopcategory-items {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: space-around;
+  margin: 20px auto;
   max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 15px;
-}
-.shopcategory .shopcategory-items .shopcategory-items-container {
-  min-width: 180px;
-  max-width: 280px;
-  flex: 1 0 20%;
-  margin: 5px;
-  padding: 10px;
-  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
-  border-radius: 15px;
 }
 .shopcategory .pagination {
   display: flex;
@@ -1787,15 +1769,13 @@ code {
 }
 
 @media (max-width: 768px) {
-  .shopcategory .shopcategory-banner {
+  .shopcategory .shopcategory-banner,
+  .shopcategory .shopcategory-indexSort,
+  .shopcategory .shopcategory-items {
     margin: 20px auto;
     width: 95%;
   }
-  .shopcategory .shopcategory-indexSort, .shopcategory .shopcategory-items-container {
-    flex-direction: column;
-    align-items: center;
-  }
-  .shopcategory .shopcategory-sort, .shopcategory .pagination button {
+  .shopcategory .shopcategory-indexSort, .shopcategory .pagination button {
     padding: 5px;
     font-size: 0.8rem;
   }

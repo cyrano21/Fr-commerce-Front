@@ -46,22 +46,16 @@ const ShopCategory = ({ banner, category }) => {
 
   return (
     <div className="shopcategory">
-      <img src={banner} alt="Bannière de la catégorie" />
-      {products.map((product, index) => (
-        <Item key={index} {...product} />
-      ))}
-      {/* Contrôles de pagination ici */}
-      <div className="pagination">
-        {Array.from({ length: totalPages }, (_, index) => (
-          <button
-            key={index}
-            onClick={() => handlePageChange(index + 1)}
-            disabled={currentPage === index + 1}
-          >
-            {index + 1}
-          </button>
+      <img src={banner} alt="Banner" className="shopcategory-banner" />
+      <div className="shopcategory-indexSort">
+        {/* Index and Sorting Elements Here */}
+      </div>
+      <div className="shopcategory-items-container">
+        {products.map((product, index) => (
+          <Item key={index} {...product} />
         ))}
       </div>
+      <div className="shopcategory-loadmore">{/* Load More Button Here */}</div>
     </div>
   )
 }

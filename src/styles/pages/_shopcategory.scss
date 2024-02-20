@@ -21,11 +21,11 @@
   }
 }
 
-.shopcategory-products {
+.shopcategory-items-container {
+  display: flex; // Use Flexbox for horizontal alignment
+  flex-wrap: wrap; // Allows items to wrap to the next line
+  justify-content: space-around; // Adjust as needed for your design
   margin: 20px 170px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  row-gap: 80px;
 }
 
 .shopcategory-loadmore {
@@ -40,14 +40,14 @@
   color: #787878;
   font-size: 18px;
   font-weight: 500;
-  text-decoration: none; // Ajout pour assurer que le lien n'a pas de soulignement
+  text-decoration: none;
 }
 
 @media (max-width: 1280px) {
   .shopcategory-banner,
   .shopcategory-indexSort,
-  .shopcategory-products {
-    margin: 20px auto; // Unifié pour simplifier
+  .shopcategory-items-container {
+    margin: 20px auto;
     width: 90%;
   }
 
@@ -62,11 +62,9 @@
     }
   }
 
-  .shopcategory-products {
-    row-gap: 40px;
-
+  .shopcategory-items-container {
     .item {
-      margin: auto;
+      margin: 10px; // Ensure there's some space around items
     }
   }
 
@@ -80,10 +78,10 @@
 
 @media (max-width: 800px) {
   .shopcategory-banner,
-  .shopcategory-products,
+  .shopcategory-items-container,
   .shopcategory-loadmore {
-    width: 95%; // Simplifié pour uniformité
-    margin: 60px auto; // Ajustement pour la marge
+    width: 95%;
+    margin: 60px auto;
   }
 
   .shopcategory-loadmore {
@@ -94,7 +92,7 @@
 }
 
 @media (max-width: 500px) {
-  .shopcategory-products {
-    grid-template-columns: repeat(2, 1fr); // Simplifié pour la lisibilité
+  .shopcategory-items-container {
+    justify-content: center; // Center items when in a single column
   }
 }

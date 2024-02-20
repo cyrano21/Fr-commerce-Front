@@ -6,11 +6,11 @@ import { useParams } from 'react-router-dom'
 import { ShopContext } from '../Context/ShopContext'
 import { useContext } from 'react'
 
-// export default Product
 const Product = () => {
   const { products } = useContext(ShopContext)
-  const { productId } = useParams()
+  const { productId } = useParams() // Cet ID est l'_id du produit dans MongoDB
 
+  // Utilisez _id pour trouver le produit, en supposant que products est un tableau d'objets avec _id comme identifiant
   const product = products.find((p) => p._id === productId)
 
   // Afficher un spinner de chargement ou un message si le produit n'est pas trouvé
@@ -23,7 +23,7 @@ const Product = () => {
       <Breadcrums product={product} />
       <ProductDisplay product={product} />
       <DescriptionBox />
-      <RelatedProducts productId={product._id} />
+      <RelatedProducts productId={product._id} /> {/* Passer _id ici */}
     </div>
   )
 }

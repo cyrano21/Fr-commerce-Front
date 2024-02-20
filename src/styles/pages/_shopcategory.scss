@@ -20,6 +20,15 @@
     justify-content: space-around;
     margin: 20px auto;
     max-width: 1200px;
+    .shopcategory-items-container {
+      width: calc(33.333% - 10px); // Pour 3 items par ligne avec un peu d'espace entre eux
+      margin: 5px; // Ajustez selon l'espacement souhaité
+
+      // Assurez-vous que les enfants direct (items) adoptent cette mise en page
+      > * {
+        width: 100%;
+      }
+    }
   }
 
   .pagination {

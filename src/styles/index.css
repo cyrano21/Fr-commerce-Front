@@ -1745,6 +1745,13 @@ code {
   margin: 20px auto;
   max-width: 1200px;
 }
+.shopcategory .shopcategory-items .shopcategory-items-container {
+  width: calc(33.333% - 10px);
+  margin: 5px;
+}
+.shopcategory .shopcategory-items .shopcategory-items-container > * {
+  width: 100%;
+}
 .shopcategory .pagination {
   display: flex;
   justify-content: center;

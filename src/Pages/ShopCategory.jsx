@@ -7,30 +7,32 @@ const ShopCategory = ({ banner, category }) => {
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(0)
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL
-        const { data } = await axios.get(`${backendUrl}/allproducts`, {
-          params: {
-            category: category,
-            page: currentPage,
-            limit: 12,
-          },
-        })
+  const fetchProducts = async () => {
+    try {
+      const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL
+      const { data } = await axios.get(`${backendUrl}/allproducts`, {
+        params: {
+          category: category,
+          page: currentPage,
+          limit: 12,
+        },
+      })
 
-        setProducts(data.products)
-        setTotalPages(data.totalPages)
-      } catch (error) {
-        console.error('Error fetching products:', error)
-      }
+      setProducts(data.products)
+      setTotalPages(data.totalPages)
+    } catch (error) {
+      console.error('Error fetching products:', error)
     }
+  }
 
+  useEffect(() => {
     fetchProducts()
   }, [category, currentPage])
 
   const handlePageChange = (newPage) => {
-    setCurrentPage(newPage)
+    if (newPage !== currentPage) {
+      setCurrentPage(newPage)
+    }
   }
 
   return (

@@ -9,6 +9,7 @@ import axios from 'axios'
 const Product = () => {
   const [products, setProducts] = useState([])
   const [selectedProductId, setSelectedProductId] = useState(null)
+
   useEffect(() => {
     const fetchProducts = async () => {
       const backendUrl =
@@ -38,7 +39,7 @@ const Product = () => {
   return (
     <div>
       <Breadcrums product={selectedProduct} />
-      <ProductDisplay product={selectedProduct} />
+      <ProductDisplay productId={selectedProductId} />
       <DescriptionBox />
       {/* Passez l'_id du produit sélectionné en props */}
       <RelatedProducts productId={selectedProductId} />

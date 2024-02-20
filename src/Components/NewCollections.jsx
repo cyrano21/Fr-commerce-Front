@@ -32,8 +32,8 @@ const NewCollections = () => {
       <h1>NOUVELLES COLLECTIONS</h1>
       <hr />
       <div className="collections">
-        {currentProducts.map((item, i) => (
-          <Item key={i} {...item} />
+        {currentProducts.map((item) => (
+          <Item key={item._id} {...item} />
         ))}
       </div>
       <div className="pagination">

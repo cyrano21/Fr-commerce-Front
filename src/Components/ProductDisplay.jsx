@@ -1,16 +1,32 @@
 /* eslint-disable react/prop-types */
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import star_dull_icon from '../assets/star_dull_icon.png'
 import { ShopContext } from '../Context/ShopContext.jsx'
 import star_icon from '../assets/star_icon.png'
 import Modal from './Modal.jsx'
+import axios from 'axios'
 
-const ProductDisplay = (props) => {
+const ProductDisplay = ({ productId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
-
-  const { product } = props
+  const [product, setProduct] = useState(null)
   const { addToCart } = useContext(ShopContext)
 
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL
+        const { data } = await axios.get(`${backendUrl}/products/${productId}`)
+        setProduct(data)
+      } catch (error) {
+        console.error(
+          'Erreur lors de la récupération des détails du produit:',
+          error,
+        )
+      }
+    }
+
+    fetchProduct()
+  }, [productId])
   const handleAddToCart = () => {
     addToCart(product.id)
     setIsModalOpen(true)

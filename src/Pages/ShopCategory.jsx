@@ -15,7 +15,7 @@ const ShopCategory = ({ banner, category }) => {
           params: {
             category: category,
             page: currentPage, // Ajout du paramètre de page pour la requête
-            limit: 16, // Vous pouvez ajuster cette valeur selon vos besoins
+            limit: 12, // Vous pouvez ajuster cette valeur selon vos besoins
           },
         })
 

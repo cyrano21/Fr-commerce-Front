@@ -86,7 +86,7 @@
     gap: 6px;
 
     h1 {
-      font-size: 20px;
+      font-size: 15px;
     }
     hr {
       width: 100px;
@@ -100,5 +100,24 @@
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 20px;
   }
+  .popular-item{
+    margin-top: 0;
+  }
+  .slick-prev, .slick-next {
+    background-color: #000;
+    color: #fff;
+    border: 2px solid #fff;
 
+    &:before {
+      color: #fff;
+    }
+  }
+
+  .slick-prev {
+    left: 10px;
+  }
+
+  .slick-next {
+    right: 10px;
+  }
 }

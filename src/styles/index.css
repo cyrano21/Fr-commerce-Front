@@ -429,6 +429,9 @@ code {
   .item img {
     width: 100%;
   }
+  .item .item p, .item .item div {
+    font-size: 10px;
+  }
 }
 
 .popular {
@@ -509,7 +512,7 @@ code {
     gap: 6px;
   }
   .popular h1 {
-    font-size: 20px;
+    font-size: 15px;
   }
   .popular hr {
     width: 100px;
@@ -520,6 +523,23 @@ code {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 20px;
+  }
+  .popular-item {
+    margin-top: 0;
+  }
+  .slick-prev, .slick-next {
+    background-color: #000;
+    color: #fff;
+    border: 2px solid #fff;
+  }
+  .slick-prev:before, .slick-next:before {
+    color: #fff;
+  }
+  .slick-prev {
+    left: 10px;
+  }
+  .slick-next {
+    right: 10px;
   }
 }
 .offers {
@@ -700,6 +720,9 @@ code {
 @media (max-width: 500px) {
   .new-collections .collections {
     grid-template-columns: repeat(2, 1fr);
+  }
+  .new-collections .collections .item p, .new-collections .collections .item div {
+    font-size: 10px;
   }
 }
 

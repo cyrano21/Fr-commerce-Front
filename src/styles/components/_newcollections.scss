@@ -61,6 +61,12 @@
   @media (max-width: 500px) {
     .collections {
       grid-template-columns: repeat(2, 1fr);
+      .item{
+        p, div{
+          font-size: 10px;
+        }
+      }
+
     }
   }
 }

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 const Item = ({ _id, name, image, new_price, old_price }) => {
   console.log('item _id', _id)
   return (
-    <Link to={`/product/${_id}`} style={{ textDecoration: 'none' }}>
+    <Link to={`/products/${_id}`} style={{ textDecoration: 'none' }}>
       <div className="item">
         {image && (
           <img

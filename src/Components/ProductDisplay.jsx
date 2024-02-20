@@ -86,8 +86,15 @@ const ProductDisplay = ({ productId }) => {
         <div className="productdisplay-right-stars">
           {/* Affichez les étoiles ici en appelant renderStars avec la note du produit */}
           {product && renderStars(product.rating)}
-          <p>({product?.numberOfReviews})</p>
+          <p>
+            (
+            {product?.numberOfReviews !== undefined
+              ? product.numberOfReviews
+              : 'Aucun avis'}
+            )
+          </p>
         </div>
+
         <div className="productdisplay-right-prices">
           <div className="productdisplay-right-price-old">
             ${product.old_price}

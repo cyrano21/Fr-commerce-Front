@@ -3,14 +3,17 @@
   margin: 30px auto;
   width: 82%;
 }
+
 .shopcategory-indexSort {
   display: flex;
-  margin: 0px 170px;
+  margin: 0 170px;
   justify-content: space-between;
   align-items: center;
+
   p span {
     font-weight: 600;
   }
+
   .shopcategory-sort {
     padding: 10px 20px;
     border-radius: 40px;
@@ -21,9 +24,10 @@
 .shopcategory-products {
   margin: 20px 170px;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: repeat(4, 1fr);
   row-gap: 80px;
 }
+
 .shopcategory-loadmore {
   display: flex;
   justify-content: center;
@@ -36,19 +40,22 @@
   color: #787878;
   font-size: 18px;
   font-weight: 500;
+  text-decoration: none; // Ajout pour assurer que le lien n'a pas de soulignement
 }
 
 @media (max-width: 1280px) {
-  .shopcategory-banner {
-    margin: 20px auto;
+  .shopcategory-banner,
+  .shopcategory-indexSort,
+  .shopcategory-products {
+    margin: 20px auto; // Unifié pour simplifier
     width: 90%;
   }
+
   .shopcategory-indexSort {
-    width: 90%;
-    margin: auto;
     p {
       font-size: 12px;
     }
+
     .shopcategory-sort {
       padding: 5px 10px;
       font-size: 12px;
@@ -56,15 +63,14 @@
   }
 
   .shopcategory-products {
-    width: 90%;
-    margin: 10px auto;
     row-gap: 40px;
 
     .item {
       margin: auto;
     }
   }
-  .shopcategory-products .shopcategory-loadmore {
+
+  .shopcategory-loadmore {
     margin: 100px auto;
     width: 200px;
     height: 60px;
@@ -73,14 +79,14 @@
 }
 
 @media (max-width: 800px) {
-  .shopcategory-banner {
-    width: 95%;
-  }
-  .shopcategory-products {
-    width: 95%;
-  }
+  .shopcategory-banner,
+  .shopcategory-products,
   .shopcategory-loadmore {
-    margin: 60px auto;
+    width: 95%; // Simplifié pour uniformité
+    margin: 60px auto; // Ajustement pour la marge
+  }
+
+  .shopcategory-loadmore {
     width: 150px;
     height: 40px;
     font-size: 13px;
@@ -89,6 +95,6 @@
 
 @media (max-width: 500px) {
   .shopcategory-products {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr); // Simplifié pour la lisibilité
   }
 }

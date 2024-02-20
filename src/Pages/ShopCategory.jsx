@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Item from '../Components/Item'
 
@@ -55,9 +55,19 @@ const ShopCategory = ({ banner, category }) => {
           <Item key={index} {...product} />
         ))}
       </div>
-      <div className="shopcategory-loadmore">{/* Load More Button Here */}</div>
+      {/* Contrôles de pagination ici */}
+      <div className="pagination">
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index}
+            onClick={() => handlePageChange(index + 1)}
+            disabled={currentPage === index + 1}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
     </div>
   )
 }
-
 export default ShopCategory

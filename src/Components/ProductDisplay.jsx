@@ -1,11 +1,13 @@
 /* eslint-disable react/prop-types */
 import { useContext, useEffect, useState } from 'react'
-import star_dull_icon from '../assets/star_dull_icon.png'
+
 import { ShopContext } from '../Context/ShopContext.jsx'
-import star_icon from '../assets/star_icon.png'
 import Modal from './Modal.jsx'
 import axios from 'axios'
-import star_half_icon from '../assets/star_half.png'
+
+import star_icon from '../assets/star_icon.png'
+import star_half_icon from '../assets/star_half_icon.svg'
+import star_dull_icon from '../assets/star_dull_icon.png'
 
 const ProductDisplay = ({ productId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)

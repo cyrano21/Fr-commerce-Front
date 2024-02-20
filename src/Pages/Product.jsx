@@ -45,9 +45,9 @@ const Product = () => {
   return (
     <div>
       <Breadcrums product={selectedProduct} />
-      <ProductDisplay productId={selectedProductId} />
+      <ProductDisplay product={selectedProduct} />
       <DescriptionBox />
-      <RelatedProducts productId={selectedProductId} />
+      <RelatedProducts productId={selectedProduct?._id} />
     </div>
   )
 }

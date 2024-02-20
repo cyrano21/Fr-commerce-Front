@@ -9,34 +9,17 @@ import star_icon from '../assets/star_icon.png'
 import star_half_icon from '../assets/star_half_icon.svg'
 import star_dull_icon from '../assets/star_dull_icon.png'
 
-const ProductDisplay = ({ productId }) => {
+const ProductDisplay = ({ selectedProduct }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [product, setProduct] = useState(null)
   const { addToCart } = useContext(ShopContext)
   const [selectedSize, setSelectedSize] = useState('')
-
-  useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL
-        const { data } = await axios.get(`${backendUrl}/products/${productId}`)
-        setProduct(data)
-      } catch (error) {
-        console.error(
-          'Erreur lors de la récupération des détails du produit:',
-          error,
-        )
-      }
-    }
-
-    fetchProduct()
-  }, [productId])
+  const product = selectedProduct
   const handleAddToCart = () => {
     if (!selectedSize) {
       alert('Please select a size.')
       return
     }
-    addToCart({ itemId: product.id, size: selectedSize })
+    addToCart({ itemId: product._id, size: selectedSize }) // Assurez-vous d'utiliser _id ici
     setIsModalOpen(true)
   }
   const selectSize = (size) => {

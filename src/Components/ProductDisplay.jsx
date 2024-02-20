@@ -5,6 +5,7 @@ import { ShopContext } from '../Context/ShopContext.jsx'
 import star_icon from '../assets/star_icon.png'
 import Modal from './Modal.jsx'
 import axios from 'axios'
+import star_half_icon from '../assets/star_half.png'
 
 const ProductDisplay = ({ productId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -94,10 +95,9 @@ const ProductDisplay = ({ productId }) => {
           </div>
         </div>
         <div className="productdisplay-right-description">
-          {product.description}
-          Un t-shirt léger, généralement tricoté, ajusté avec un col rond et des
-          manches courtes, porté comme un sous-vêtement ou un vêtement
-          extérieur.
+          {product.description
+            ? product.description
+            : 'Un t-shirt léger, généralement tricoté, ajusté avec un col rond et des manches courtes, porté comme un sous-vêtement ou un vêtement extérieur.'}
         </div>
 
         <div className="productdisplay-right-size">

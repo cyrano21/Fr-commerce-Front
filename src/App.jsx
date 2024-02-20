@@ -10,6 +10,7 @@ import women_banner from './assets/banner_women.png'
 import men_banner from './assets/banner_mens.png'
 import kids_banner from './assets/banner_kids.png'
 import PaymentPage from './Components/PaymentPage.jsx'
+import ProductDisplay from './Components/ProductDisplay.jsx'
 
 function App() {
   return (
@@ -29,7 +30,7 @@ function App() {
           path="/kids"
           element={<ShopCategory banner={kids_banner} category="Kid" />}
         />
-        <Route path="/product/:productId" element={<Product />} />
+        <Route path="/products/:productId" element={<ProductDisplay />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="/login" element={<LoginSignup />} />

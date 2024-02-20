@@ -31,7 +31,7 @@ const RelatedProducts = ({ productId }) => {
       <hr />
       <div className="relatedproducts-item">
         {relatedProducts.map((item) => (
-          <Item key={item.id} {...item} />
+          <Item key={productId} {...item} />
         ))}
       </div>
     </div>

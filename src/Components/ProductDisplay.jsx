@@ -8,12 +8,31 @@ import axios from 'axios'
 import star_icon from '../assets/star_icon.png'
 import star_half_icon from '../assets/star_half_icon.svg'
 import star_dull_icon from '../assets/star_dull_icon.png'
+import { useParams } from 'react-router-dom'
 
-const ProductDisplay = ({ selectedProduct }) => {
+const ProductDisplay = () => {
+  const { productId } = useParams()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { addToCart } = useContext(ShopContext)
   const [selectedSize, setSelectedSize] = useState('')
-  const product = selectedProduct
+  const [product, setProduct] = useState(null)
+
+  const fetchProduct = async () => {
+    try {
+      const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL
+      const { data } = await axios.get(`${backendUrl}/products/${productId}`)
+      setProduct(data)
+    } catch (error) {
+      console.error(
+        'Erreur lors de la récupération des détails du produit:',
+        error,
+      )
+    }
+  }
+
+  useEffect(() => {
+    fetchProduct()
+  }, [productId])
   const handleAddToCart = () => {
     if (!selectedSize) {
       alert('Please select a size.')

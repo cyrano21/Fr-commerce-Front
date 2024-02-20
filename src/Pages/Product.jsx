@@ -4,14 +4,16 @@ import DescriptionBox from '../Components/DescriptionBox.jsx'
 import RelatedProducts from '../Components/RelatedProducts.jsx'
 import { useParams } from 'react-router-dom'
 import { ShopContext } from '../Context/ShopContext'
-import { useContext } from 'react'
+import { useContext, useMemo } from 'react'
 
+// export default Product
 const Product = () => {
   const { products } = useContext(ShopContext)
-  const { productId } = useParams() // Cet ID est l'_id du produit dans MongoDB
-
-  // Utilisez _id pour trouver le produit, en supposant que products est un tableau d'objets avec _id comme identifiant
-  const product = products.find((p) => p._id === productId)
+  const { _id } = useParams()
+  const product = useMemo(
+    () => products.find((p) => p._id === _id),
+    [products, _id],
+  )
 
   // Afficher un spinner de chargement ou un message si le produit n'est pas trouvé
   if (!product) {
@@ -23,7 +25,7 @@ const Product = () => {
       <Breadcrums product={product} />
       <ProductDisplay product={product} />
       <DescriptionBox />
-      <RelatedProducts productId={product._id} /> {/* Passer _id ici */}
+      <RelatedProducts productId={product._id} />
     </div>
   )
 }

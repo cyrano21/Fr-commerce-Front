@@ -1,14 +1,14 @@
-import axios from 'axios'
-import { useEffect, useState } from 'react'
-import RelatedProducts from '../Components/RelatedProducts.jsx'
+import Breadcrums from '../Components/Breadcrums.jsx'
 import ProductDisplay from '../Components/ProductDisplay.jsx'
-import Breadcrumbs from '../Components/Breadcrumbs.jsx'
 import DescriptionBox from '../Components/DescriptionBox.jsx'
+import RelatedProducts from '../Components/RelatedProducts.jsx'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
 
-const ProductPage = () => {
+// export default Product
+const Product = () => {
   const [products, setProducts] = useState([])
   const [selectedProductId, setSelectedProductId] = useState(null)
-
   useEffect(() => {
     const fetchProducts = async () => {
       const backendUrl =
@@ -27,8 +27,6 @@ const ProductPage = () => {
 
     fetchProducts()
   }, [])
-
-  // Trouvez le produit sélectionné basé sur selectedProductId
   const selectedProduct = products.find(
     (product) => product._id === selectedProductId,
   )
@@ -39,7 +37,7 @@ const ProductPage = () => {
 
   return (
     <div>
-      <Breadcrumbs product={selectedProduct} />
+      <Breadcrums product={selectedProduct} />
       <ProductDisplay product={selectedProduct} />
       <DescriptionBox />
       {/* Passez l'_id du produit sélectionné en props */}
@@ -48,4 +46,4 @@ const ProductPage = () => {
   )
 }
 
-export default ProductPage
+export default Product

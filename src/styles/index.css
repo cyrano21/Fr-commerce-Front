@@ -977,7 +977,8 @@ code {
 
 .productdisplay {
   display: flex;
-  margin: 0 170px;
+  margin: 60px;
+  width: 70%;
 }
 .productdisplay .productdisplay-left {
   display: flex;
@@ -1005,18 +1006,6 @@ code {
   font-size: 40px;
   font-weight: 700;
 }
-.productdisplay .productdisplay-right .size-option {
-  cursor: pointer;
-  padding: 5px 10px;
-  margin: 5px;
-  border: 1px solid #ccc;
-  display: inline-block;
-}
-.productdisplay .productdisplay-right .size-option.selected {
-  background-color: #007bff;
-  color: white;
-  border-color: #007bff;
-}
 .productdisplay .productdisplay-right .productdisplay-right-stars {
   display: flex;
   align-items: center;
@@ -1027,7 +1016,7 @@ code {
 }
 .productdisplay .productdisplay-right .productdisplay-right-prices {
   display: flex;
-  margin: 40px 0px;
+  margin: 40px 0;
   gap: 30px;
   font-size: 24px;
   font-weight: 700;
@@ -1047,11 +1036,11 @@ code {
 }
 .productdisplay .productdisplay-right .productdisplay-right-size .productdisplay-right-sizes {
   display: flex;
-  margin: 30px 0px;
+  margin: 20px 0;
   gap: 20px;
 }
 .productdisplay .productdisplay-right .productdisplay-right-size .productdisplay-right-sizes div {
-  padding: 18px 24px;
+  padding: 1rem 1.2rem;
   background: #fbfbfb;
   border: 1px solid #ebebeb;
   border-radius: 3px;
@@ -1059,7 +1048,6 @@ code {
 }
 .productdisplay .productdisplay-right button {
   padding: 20px 40px;
-  width: 200px;
   font-size: 16px;
   font-weight: 600;
   color: white;
@@ -1077,9 +1065,6 @@ code {
 }
 
 @media (max-width: 1280px) {
-  .productdisplay {
-    margin: 0 60px;
-  }
   .productdisplay .productdisplay-left {
     gap: 10px;
   }
@@ -1201,9 +1186,6 @@ code {
     margin-top: 10px;
     gap: 5px;
   }
-  .productdisplay .productdisplay-right .productdisplay-right-sizes div {
-    padding: 4px 11px;
-  }
   .productdisplay .productdisplay-right button {
     width: 100px;
     font-size: 12px;
@@ -1215,6 +1197,7 @@ code {
 @media (max-width: 500px) {
   .productdisplay {
     flex-direction: column;
+    margin: 60px;
   }
   .productdisplay .productdisplay-left {
     gap: 10px;
@@ -1243,17 +1226,15 @@ code {
     width: 15px;
   }
   .productdisplay .productdisplay-right .productdisplay-right-sizes {
-    gap: 10px;
     margin: 20px 0;
   }
   .productdisplay .productdisplay-right .productdisplay-right-sizes div {
-    padding: 10px 16px;
-    font-size: 14px;
+    padding: 0;
   }
   .productdisplay .productdisplay-right button {
     width: 130px;
     font-size: 15px;
-    padding: 12px 0px;
+    padding: 12px 0;
   }
   .productdisplay .productdisplay-right .productdisplay-right-category {
     font-size: 16px;

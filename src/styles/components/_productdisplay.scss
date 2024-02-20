@@ -1,6 +1,7 @@
 .productdisplay {
   display: flex;
-  margin: 0 170px;
+  margin: 60px ;
+  width: 70%;
 
   .productdisplay-left {
     display: flex;
@@ -33,20 +34,6 @@
       font-weight: 700;
     }
 
-    .size-option {
-      cursor: pointer;
-      padding: 5px 10px;
-      margin: 5px;
-      border: 1px solid #ccc;
-      display: inline-block;
-    }
-
-    .size-option.selected {
-      background-color: #007bff;
-      color: white;
-      border-color: #007bff;
-    }
-
     .productdisplay-right-stars {
       display: flex;
       align-items: center;
@@ -58,7 +45,7 @@
 
     .productdisplay-right-prices {
       display: flex;
-      margin: 40px 0px;
+      margin: 40px 0;
       gap: 30px;
       font-size: 24px;
       font-weight: 700;
@@ -83,11 +70,11 @@
 
       .productdisplay-right-sizes {
         display: flex;
-        margin: 30px 0px;
+        margin: 20px 0;
         gap: 20px;
 
         div {
-          padding: 18px 24px;
+          padding: 1rem 1.2rem;
           background: #fbfbfb;
           border: 1px solid #ebebeb;
           border-radius: 3px;
@@ -98,7 +85,6 @@
 
     button {
       padding: 20px 40px;
-      width: 200px;
       font-size: 16px;
       font-weight: 600;
       color: white;
@@ -121,7 +107,7 @@
 
 @media (max-width: 1280px) {
   .productdisplay {
-    margin: 0 60px;
+
 
     .productdisplay-left {
       gap: 10px;
@@ -283,7 +269,6 @@
         gap: 5px;
 
         div {
-          padding: 4px 11px;
         }
       }
 
@@ -302,6 +287,9 @@
 @media (max-width: 500px) {
   .productdisplay {
     flex-direction: column;
+    margin: 60px;
+
+
 
     .productdisplay-left {
       gap: 10px;
@@ -336,19 +324,18 @@
       }
 
       .productdisplay-right-sizes {
-        gap: 10px;
+
         margin: 20px 0;
 
         div {
-          padding: 10px 16px;
-          font-size: 14px;
+          padding: 0;
         }
       }
 
       button {
         width: 130px;
         font-size: 15px;
-        padding: 12px 0px;
+        padding: 12px 0;
       }
 
       .productdisplay-right-category {

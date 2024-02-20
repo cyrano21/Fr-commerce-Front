@@ -52,7 +52,14 @@ const ProductDisplay = () => {
       stars.push(<img key={`star-${i}`} src={star_icon} alt="star" />)
     }
     if (rating % 1 !== 0) {
-      stars.push(<img key="star-half" src={star_half_icon} alt="half star" />)
+      stars.push(
+        <img
+          key="star-half"
+          src={star_half_icon}
+          alt="half star"
+          style={{ width: '20px', height: '20' }}
+        />,
+      )
     }
     for (let i = stars.length + 1; i <= totalStars; i++) {
       stars.push(
@@ -84,63 +91,63 @@ const ProductDisplay = () => {
         </div>
       </div>
       <div className="productdisplay-right">
-        <h1>{product?.name}</h1>
-        <div className="productdisplay-right-stars">
-          {/* Affichez les étoiles ici en appelant renderStars avec la note du produit */}
-          {product && renderStars(product.rating)}
-          <p>
-            (
-            {product?.numberOfReviews !== undefined
-              ? product.numberOfReviews
-              : 'Aucun avis'}
-            )
+        <div>
+          <h1>{product?.name}</h1>
+          <div className="productdisplay-right-stars">
+            {product && renderStars(product.rating)}
+            <p>
+              (
+              {product?.numberOfReviews !== undefined
+                ? product.numberOfReviews
+                : 'Aucun avis'}
+              )
+            </p>
+          </div>
+
+          <div className="productdisplay-right-prices">
+            <div className="productdisplay-right-price-old">
+              ${product.old_price}
+            </div>
+            <div className="productdisplay-right-price-new">
+              ${product.new_price}
+            </div>
+          </div>
+          <div className="productdisplay-right-description">
+            {product.description
+              ? product.description
+              : 'Un t-shirt léger, généralement tricoté, ajusté avec un col rond et des manches courtes, porté comme un sous-vêtement ou un vêtement extérieur.'}
+          </div>
+
+          <div className="productdisplay-right-size">
+            <h1>Select Size</h1>
+            <div className="productdisplay-right-sizes">
+              {['S', 'M', 'L', 'XL', 'XXL'].map((size) => (
+                <div
+                  key={size}
+                  className={`size-option ${selectedSize === size ? 'selected' : ''}`}
+                  onClick={() => selectSize(size)}
+                >
+                  {size}
+                </div>
+              ))}
+            </div>
+          </div>
+          <button onClick={handleAddToCart}>AJOUTER AU PANIER</button>
+          <p className="productdisplay-right-category">
+            <span>Category :</span> {product.category}
+          </p>
+          <p className="productdisplay-right-tags">
+            <span>Tags :</span> {product.tags?.join(', ')}
           </p>
         </div>
 
-        <div className="productdisplay-right-prices">
-          <div className="productdisplay-right-price-old">
-            ${product.old_price}
-          </div>
-          <div className="productdisplay-right-price-new">
-            ${product.new_price}
-          </div>
-        </div>
-        <div className="productdisplay-right-description">
-          {product.description
-            ? product.description
-            : 'Un t-shirt léger, généralement tricoté, ajusté avec un col rond et des manches courtes, porté comme un sous-vêtement ou un vêtement extérieur.'}
-        </div>
-
-        <div className="productdisplay-right-size">
-          <h1>Select Size</h1>
-          <div className="productdisplay-right-sizes">
-            {['S', 'M', 'L', 'XL', 'XXL'].map((size) => (
-              <div
-                key={size}
-                className={`size-option ${selectedSize === size ? 'selected' : ''}`}
-                onClick={() => selectSize(size)}
-              >
-                {size}
-              </div>
-            ))}
-          </div>
-        </div>
-        <button onClick={handleAddToCart}>AJOUTER AU PANIER</button>
-        <p className="productdisplay-right-category">
-          <span>Category :</span> {product.category}
-        </p>
-        {/* Supposons que `tags` est un tableau de strings */}
-        <p className="productdisplay-right-tags">
-          <span>Tags :</span> {product.tags?.join(', ')}
-        </p>
+        {isModalOpen && (
+          <Modal onClose={() => setIsModalOpen(false)}>
+            <p>Le produit a bien été ajouté au panier !</p>
+            <button onClick={() => setIsModalOpen(false)}></button>
+          </Modal>
+        )}
       </div>
-
-      {isModalOpen && (
-        <Modal onClose={() => setIsModalOpen(false)}>
-          <p>Le produit a bien été ajouté au panier !</p>
-          <button onClick={() => setIsModalOpen(false)}></button>
-        </Modal>
-      )}
     </div>
   )
 }

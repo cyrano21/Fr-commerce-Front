@@ -5,26 +5,23 @@ import Item from './Item.jsx'
 const RelatedProducts = ({ productId }) => {
   const [relatedProducts, setRelatedProducts] = useState([])
 
-  const fetchRelatedProducts = async () => {
-    try {
+  useEffect(() => {
+    const fetchRelatedProducts = async () => {
       if (productId) {
         const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL
-        // Utiliser `productId` dans l'URL de la requête
-        const { data } = await axios.get(
-          `${backendUrl}/relatedproducts/${productId}`,
-        )
-
-        console.log('data fetchRelatedProducts >>>', data)
-        setRelatedProducts(data)
+        try {
+          const { data } = await axios.get(
+            `${backendUrl}/relatedproducts/${productId}`,
+          )
+          setRelatedProducts(data)
+        } catch (error) {
+          console.error(
+            'Erreur lors de la récupération des produits associés:',
+            error,
+          )
+        }
       }
-    } catch (error) {
-      console.error(
-        'Erreur lors de la récupération des produits associés:',
-        error,
-      )
     }
-  }
-  useEffect(() => {
     fetchRelatedProducts()
   }, [productId])
 

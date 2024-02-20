@@ -990,6 +990,18 @@ code {
   font-size: 40px;
   font-weight: 700;
 }
+.productdisplay .productdisplay-right .size-option {
+  cursor: pointer;
+  padding: 5px 10px;
+  margin: 5px;
+  border: 1px solid #ccc;
+  display: inline-block;
+}
+.productdisplay .productdisplay-right .size-option.selected {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
 .productdisplay .productdisplay-right .productdisplay-right-stars {
   display: flex;
   align-items: center;

@@ -33,6 +33,20 @@
       font-weight: 700;
     }
 
+    .size-option {
+      cursor: pointer;
+      padding: 5px 10px;
+      margin: 5px;
+      border: 1px solid #ccc;
+      display: inline-block;
+    }
+
+    .size-option.selected {
+      background-color: #007bff;
+      color: white;
+      border-color: #007bff;
+    }
+
     .productdisplay-right-stars {
       display: flex;
       align-items: center;

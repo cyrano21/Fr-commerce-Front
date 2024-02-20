@@ -2,8 +2,8 @@ import { useContext } from 'react'
 import axios from 'axios' // Utilisez axiosInstance si vous avez une configuration spécifique
 import { ShopContext } from '../Context/ShopContext.jsx'
 import { useNavigate } from 'react-router-dom'
-
 import cross_icon from '../assets/cart_cross_icon.png' // Assurez-vous que le chemin est correct
+
 const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL
 
 const CartItems = () => {
@@ -24,12 +24,12 @@ const CartItems = () => {
       .filter((product) => cartItems[product.id] > 0)
       .map((product) => ({
         productId: product._id,
-        quantity: cartItems[product.id],
+        quantity: cartItems[product._id],
         price: product.new_price,
       }))
 
     try {
-      axios.post(
+      await axios.post(
         `${backendUrl}/completePurchase`,
         { items: saleItems },
         {
@@ -59,7 +59,7 @@ const CartItems = () => {
       <hr />
       <div className="cartitems-list">
         {products
-          .filter((product) => cartItems[product.id] > 0)
+          .filter((product) => cartItems[product._id] > 0)
           .map((product) => (
             <div key={product.id} className="cartitems-format">
               <img
@@ -70,13 +70,13 @@ const CartItems = () => {
               <p className="cartitems-product-title">{product.name}</p>
               <p>${product.new_price}</p>
               <div className="cartitems-quantity">
-                <button onClick={() => decreaseQuantity(product.id)}>-</button>
-                <span>{cartItems[product.id]}</span>
-                <button onClick={() => increaseQuantity(product.id)}>+</button>
+                <button onClick={() => decreaseQuantity(product._id)}>-</button>
+                <span>{cartItems[product._id]}</span>
+                <button onClick={() => increaseQuantity(product._id)}>+</button>
               </div>
-              <p>${product.new_price * cartItems[product.id]}</p>
+              <p>${product.new_price * cartItems[product._id]}</p>
               <img
-                onClick={() => removeFromCart(product.id)}
+                onClick={() => removeFromCart(product._id)}
                 className="cartitems-remove-icon"
                 src={cross_icon}
                 alt="remove"

@@ -10,6 +10,7 @@ const ProductDisplay = ({ productId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [product, setProduct] = useState(null)
   const { addToCart } = useContext(ShopContext)
+  const [selectedSize, setSelectedSize] = useState('')
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -28,8 +29,36 @@ const ProductDisplay = ({ productId }) => {
     fetchProduct()
   }, [productId])
   const handleAddToCart = () => {
-    addToCart(product.id)
+    if (!selectedSize) {
+      alert('Please select a size.')
+      return
+    }
+    addToCart({ itemId: product.id, size: selectedSize })
     setIsModalOpen(true)
+  }
+  const selectSize = (size) => {
+    setSelectedSize(size)
+  }
+
+  const renderStars = (rating) => {
+    const totalStars = 5
+    let stars = []
+    for (let i = 1; i <= Math.floor(rating); i++) {
+      stars.push(<img key={`star-${i}`} src={star_icon} alt="star" />)
+    }
+    if (rating % 1 !== 0) {
+      stars.push(<img key="star-half" src={star_half_icon} alt="half star" />)
+    }
+    for (let i = stars.length + 1; i <= totalStars; i++) {
+      stars.push(
+        <img key={`star-${i}`} src={star_dull_icon} alt="empty star" />,
+      )
+    }
+    return stars
+  }
+
+  if (!product) {
+    return <div>Chargement...</div>
   }
 
   return (
@@ -44,21 +73,17 @@ const ProductDisplay = ({ productId }) => {
         <div className="productdisplay-img">
           <img
             className="productdisplay-main-img"
-            // eslint-disable-next-line react/prop-types
             src={product.image}
-            alt="img"
+            alt="Produit"
           />
         </div>
       </div>
       <div className="productdisplay-right">
-        <h1>{product.name}</h1>
+        <h1>{product?.name}</h1>
         <div className="productdisplay-right-stars">
-          <img src={star_icon} alt="" />
-          <img src={star_icon} alt="" />
-          <img src={star_icon} alt="" />
-          <img src={star_icon} alt="" />
-          <img src={star_dull_icon} alt="" />
-          <p>(122)</p>
+          {/* Affichez les étoiles ici en appelant renderStars avec la note du produit */}
+          {product && renderStars(product.rating)}
+          <p>({product?.numberOfReviews})</p>
         </div>
         <div className="productdisplay-right-prices">
           <div className="productdisplay-right-price-old">
@@ -69,6 +94,7 @@ const ProductDisplay = ({ productId }) => {
           </div>
         </div>
         <div className="productdisplay-right-description">
+          {product.description}
           Un t-shirt léger, généralement tricoté, ajusté avec un col rond et des
           manches courtes, porté comme un sous-vêtement ou un vêtement
           extérieur.
@@ -77,21 +103,27 @@ const ProductDisplay = ({ productId }) => {
         <div className="productdisplay-right-size">
           <h1>Select Size</h1>
           <div className="productdisplay-right-sizes">
-            <div>S</div>
-            <div>M</div>
-            <div>L</div>
-            <div>XL</div>
-            <div>XXL</div>
+            {['S', 'M', 'L', 'XL', 'XXL'].map((size) => (
+              <div
+                key={size}
+                className={`size-option ${selectedSize === size ? 'selected' : ''}`}
+                onClick={() => selectSize(size)}
+              >
+                {size}
+              </div>
+            ))}
           </div>
         </div>
         <button onClick={handleAddToCart}>AJOUTER AU PANIER</button>
         <p className="productdisplay-right-category">
-          <span>Category :</span> Femmes, T-shirt, Crop Top
+          <span>Category :</span> {product.category}
         </p>
-        <p className="productdisplay-right-category">
-          <span>Tags :</span> Modern, Latest
+        {/* Supposons que `tags` est un tableau de strings */}
+        <p className="productdisplay-right-tags">
+          <span>Tags :</span> {product.tags?.join(', ')}
         </p>
       </div>
+
       {isModalOpen && (
         <Modal onClose={() => setIsModalOpen(false)}>
           <p>Le produit a bien été ajouté au panier !</p>

@@ -71,8 +71,16 @@ const ShopContextProvider = (props) => {
     return totalItem
   }
 
-  const addToCart = (itemId) => {
-    setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }))
+  const addToCart = ({ itemId, size }) => {
+    setCartItems((prev) => ({
+      ...prev,
+      [itemId]: {
+        quantity: prev[itemId] ? prev[itemId].quantity + 1 : 1,
+        size: size,
+      },
+    }))
+
+    // Mise à jour du panier côté serveur avec l'authentification et la taille
     if (localStorage.getItem('auth-token')) {
       fetch(`${backendUrl}/addtocart`, {
         method: 'POST',
@@ -81,7 +89,7 @@ const ShopContextProvider = (props) => {
           'auth-token': localStorage.getItem('auth-token'),
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ itemId: itemId }),
+        body: JSON.stringify({ itemId, size }),
       })
         .then((response) => {
           if (!response.ok) {

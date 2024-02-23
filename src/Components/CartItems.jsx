@@ -7,6 +7,8 @@ import cross_icon from '../assets/cart_cross_icon.png' // Assurez-vous que le ch
 const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL
 
 const CartItems = () => {
+  console.log('État actuel de cartItems :', cartItems)
+
   const navigate = useNavigate()
   const {
     cartItems,
@@ -20,6 +22,12 @@ const CartItems = () => {
   } = useContext(ShopContext)
 
   console.log('products:', products)
+  console.log('cartItems:', cartItems)
+
+  console.log(
+    'products.filter((product) => cartItems[product._id] > 0):',
+    products.filter((product) => cartItems[product._id] > 0),
+  )
 
   const handleCheckout = async () => {
     const saleItems = products
@@ -65,18 +73,38 @@ const CartItems = () => {
             (product) =>
               cartItems[product._id] && cartItems[product._id].quantity > 0,
           )
-          .map((product) => (
-            <div key={product._id} className="cartitems-format">
-              <img
-                className="cartitems-product-icon"
-                src={product.image} // Assurez-vous que ce chemin est correct et accessible
-                alt={product.name}
-              />
-              <p className="cartitems-product-title">{product.name}</p>
-              <p>${product.new_price}</p>
-              ...
-            </div>
-          ))}
+
+          .map((product) => {
+            console.log("URL de l'image pour le produit :", product.image)
+            return (
+              <div key={product._id} className="cartitems-format">
+                <img
+                  className="cartitems-product-icon"
+                  src={product.image}
+                  alt={product.name}
+                />
+
+                <p className="cartitems-product-title">{product.name}</p>
+                <p>${product.new_price}</p>
+                <div className="cartitems-quantity">
+                  <button onClick={() => decreaseQuantity(product._id)}>
+                    -
+                  </button>
+                  <span>{cartItems[product._id].quantity}</span>
+                  <button onClick={() => increaseQuantity(product._id)}>
+                    +
+                  </button>
+                </div>
+                <p>${product.new_price * cartItems[product._id].quantity}</p>
+                <img
+                  onClick={() => removeFromCart(product._id)}
+                  className="cartitems-remove-icon"
+                  src={cross_icon}
+                  alt="remove"
+                />
+              </div>
+            )
+          })}
       </div>
 
       <div className="cartitems-down">

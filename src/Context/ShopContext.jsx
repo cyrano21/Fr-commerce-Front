@@ -15,7 +15,7 @@ const ShopContextProvider = (props) => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/allproducts`,
+            `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/allproducts`,
         )
         setProducts(response.data.products)
       } catch (error) {
@@ -91,27 +91,27 @@ const ShopContextProvider = (props) => {
   // Calcul du nombre total d'articles dans le panier
   const getTotalCartItems = () => {
     return Object.values(cartItems).reduce(
-      (total, item) => total + item.quantity,
-      0,
+        (total, item) => total + item.quantity,
+        0,
     )
   }
 
   return (
-    <ShopContext.Provider
-      value={{
-        products,
-        addToCart,
-        removeFromCart,
-        getTotalCartAmount,
-        getTotalCartItems,
-        increaseQuantity,
-        decreaseQuantity,
-        resetCart,
-        cartItems,
-      }}
-    >
-      {props.children}
-    </ShopContext.Provider>
+      <ShopContext.Provider
+          value={{
+            products,
+            addToCart,
+            removeFromCart,
+            getTotalCartAmount,
+            getTotalCartItems,
+            increaseQuantity,
+            decreaseQuantity,
+            resetCart,
+            cartItems,
+          }}
+      >
+        {props.children}
+      </ShopContext.Provider>
   )
 }
 

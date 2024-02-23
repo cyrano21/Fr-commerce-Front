@@ -19,9 +19,11 @@ const CartItems = () => {
     products,
   } = useContext(ShopContext)
 
+  console.log('products:', products)
+
   const handleCheckout = async () => {
     const saleItems = products
-      .filter((product) => cartItems[product.id] > 0)
+      .filter((product) => cartItems[product._id] > 0)
       .map((product) => ({
         productId: product._id,
         quantity: cartItems[product._id],
@@ -59,28 +61,20 @@ const CartItems = () => {
       <hr />
       <div className="cartitems-list">
         {products
-          .filter((product) => cartItems[product._id] > 0)
+          .filter(
+            (product) =>
+              cartItems[product._id] && cartItems[product._id].quantity > 0,
+          )
           .map((product) => (
-            <div key={product.id} className="cartitems-format">
+            <div key={product._id} className="cartitems-format">
               <img
                 className="cartitems-product-icon"
-                src={product.image}
-                alt=""
+                src={product.image} // Assurez-vous que ce chemin est correct et accessible
+                alt={product.name}
               />
               <p className="cartitems-product-title">{product.name}</p>
               <p>${product.new_price}</p>
-              <div className="cartitems-quantity">
-                <button onClick={() => decreaseQuantity(product._id)}>-</button>
-                <span>{cartItems[product._id]}</span>
-                <button onClick={() => increaseQuantity(product._id)}>+</button>
-              </div>
-              <p>${product.new_price * cartItems[product._id]}</p>
-              <img
-                onClick={() => removeFromCart(product._id)}
-                className="cartitems-remove-icon"
-                src={cross_icon}
-                alt="remove"
-              />
+              ...
             </div>
           ))}
       </div>

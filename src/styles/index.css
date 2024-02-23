@@ -1034,6 +1034,11 @@ code {
   font-size: 20px;
   font-weight: 600;
 }
+.productdisplay .productdisplay-right .productdisplay-right-size .size-option.selected {
+  background-color: #FF4142;
+  color: white;
+  border-color: #007bff;
+}
 .productdisplay .productdisplay-right .productdisplay-right-size .productdisplay-right-sizes {
   display: flex;
   margin: 20px 0;
@@ -1197,47 +1202,22 @@ code {
 @media (max-width: 500px) {
   .productdisplay {
     flex-direction: column;
-    margin: 60px;
+    margin: 20px 10px; /* Ajustez les marges pour les petits écrans */
   }
-  .productdisplay .productdisplay-left {
-    gap: 10px;
-    flex-direction: row;
-    margin: auto;
+  .productdisplay-left, .productdisplay-right {
+    width: 100%; /* Assurez-vous que les enfants prennent toute la largeur disponible */
   }
-  .productdisplay .productdisplay-left .productdisplay-img-list {
-    flex-direction: column;
-    gap: 8px;
+  .productdisplay-main-img {
+    width: 100%; /* Assurez-vous que l'image principale s'adapte à la largeur du conteneur */
+    height: auto; /* Maintenez le ratio d'aspect */
   }
-  .productdisplay .productdisplay-left .productdisplay-img-list img {
-    height: 75px;
+  /* Ajustez également la taille des textes et des boutons pour une meilleure lisibilité */
+  .productdisplay-right h1 {
+    font-size: 16px; /* Réduisez la taille du texte pour l'adapter */
   }
-  .productdisplay .productdisplay-left .productdisplay-main-img {
-    height: 330px;
-  }
-  .productdisplay .productdisplay-right {
-    margin: 5px;
-  }
-  .productdisplay .productdisplay-right h1 {
-    margin-top: 15px;
-    font-size: 20px;
-    font-weight: 500;
-  }
-  .productdisplay .productdisplay-right .productdisplay-right-stars img {
-    width: 15px;
-  }
-  .productdisplay .productdisplay-right .productdisplay-right-sizes {
-    margin: 20px 0;
-  }
-  .productdisplay .productdisplay-right .productdisplay-right-sizes div {
-    padding: 0;
-  }
-  .productdisplay .productdisplay-right button {
-    width: 130px;
-    font-size: 15px;
-    padding: 12px 0;
-  }
-  .productdisplay .productdisplay-right .productdisplay-right-category {
-    font-size: 16px;
+  .productdisplay-right button {
+    padding: 10px; /* Ajustez le padding des boutons */
+    font-size: 14px; /* Réduisez la taille du texte des boutons */
   }
 }
 .relatedproducts {

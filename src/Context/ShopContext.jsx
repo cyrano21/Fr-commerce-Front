@@ -1,157 +1,114 @@
-import { createContext, useEffect, useState } from 'react'
+import { createContext, useState, useEffect } from 'react'
+import axios from 'axios' // Assurez-vous d'avoir axios installé
 
-const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL
+export const ShopContext = createContext()
 
-export const ShopContext = createContext(null)
 const ShopContextProvider = (props) => {
   const [products, setProducts] = useState([])
+  // Initialiser cartItems avec les données de localStorage si disponibles
+  const initialCartItems = JSON.parse(localStorage.getItem('cartItems')) || {}
+  const [cartItems, setCartItems] = useState(initialCartItems)
+
+  const getDefaultCart = () => ({})
+  // Chargez vos produits ici
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/allproducts`,
+        )
+        setProducts(response.data.products)
+      } catch (error) {
+        console.error('Erreur lors du chargement des produits:', error)
+      }
+    }
+    fetchProducts()
+  }, [])
+
+  useEffect(() => {
+    // Sauvegarder cartItems dans localStorage chaque fois que cartItems change
+    localStorage.setItem('cartItems', JSON.stringify(cartItems))
+  }, [cartItems])
 
   const increaseQuantity = (itemId) => {
-    setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }))
+    setCartItems((prev) => {
+      const item = prev[itemId] || { quantity: 0 }
+      item.quantity += 1
+      return { ...prev, [itemId]: item }
+    })
   }
 
   const decreaseQuantity = (itemId) => {
     setCartItems((prev) => {
-      const newQuantity = Math.max(1, prev[itemId] - 1) // La quantité ne peut pas être inférieure à 1
-      return { ...prev, [itemId]: newQuantity }
+      const item = prev[itemId]
+      // Vérifier d'abord si l'article existe et a une quantité.
+      if (item) {
+        // Décrémenter la quantité
+        item.quantity -= 1
+        // Si la quantité est maintenant 0, supprimer l'article du panier
+        if (item.quantity < 1) {
+          const updatedItems = { ...prev }
+          delete updatedItems[itemId]
+          return updatedItems
+        }
+        // Sinon, retourner le panier mis à jour avec la quantité décrémentée
+        return { ...prev, [itemId]: item }
+      }
+      // Si l'article n'existe pas, retourner simplement l'état actuel
+      return prev
     })
   }
 
-  const getDefaultCart = () => {
-    let cart = {}
-    for (let i = 0; i < 300; i++) {
-      cart[i] = 0
-    }
-    return cart
+  const resetCart = () => {
+    setCartItems(getDefaultCart())
   }
-
-  const [cartItems, setCartItems] = useState(getDefaultCart())
-
-  useEffect(() => {
-    fetch(`${backendUrl}/allproducts`)
-      .then((res) => res.json())
-      .then((data) => setProducts(data.products))
-
-    if (localStorage.getItem('auth-token')) {
-      fetch(`${backendUrl}/getcart`, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/form-data',
-          'auth-token': `${localStorage.getItem('auth-token')}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(),
-      })
-        .then((resp) => resp.json())
-        .then((data) => {
-          setCartItems(data)
-        })
-    }
-  }, [])
-
-  const getTotalCartAmount = () => {
-    return Object.keys(cartItems).reduce((total, itemId) => {
-      const product = products.find(
-        (p) => p.id && p.id.toString() === itemId.toString(),
-      )
-      if (product && product.new_price) {
-        total += product.new_price * cartItems[itemId]
-      }
-      return total
-    }, 0)
-  }
-
-  const getTotalCartItems = () => {
-    let totalItem = 0
-    for (const item in cartItems) {
-      if (cartItems[item] > 0) {
-        totalItem += cartItems[item]
-      }
-    }
-    return totalItem
-  }
-
-  const addToCart = ({ itemId, size }) => {
-    setCartItems((prev) => ({
-      ...prev,
-      [itemId]: {
-        quantity: prev[itemId] ? prev[itemId].quantity + 1 : 1,
-        size: size,
-      },
-    }))
-
-    // Mise à jour du panier côté serveur avec l'authentification et la taille
-    if (localStorage.getItem('auth-token')) {
-      fetch(`${backendUrl}/addtocart`, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'auth-token': localStorage.getItem('auth-token'),
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ itemId, size }),
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok')
-          }
-          return response.json()
-        })
-        .then((data) => {
-          console.log('addcard data', data.message)
-        })
-        .catch((error) => {
-          console.error(
-            'There has been a problem with your fetch operation:',
-            error,
-          )
-        })
-    }
+  const addToCart = ({ itemId, size, quantity = 1, image }) => {
+    setCartItems((currentItems) => {
+      const newItem = currentItems[itemId] || { quantity: 0, size, image } // Ajoutez l'image ici
+      newItem.quantity += quantity
+      return { ...currentItems, [itemId]: newItem }
+    })
   }
 
   const removeFromCart = (itemId) => {
-    setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }))
-    if (localStorage.getItem('auth-token')) {
-      fetch(`${backendUrl}/removefromcart`, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'auth-token': localStorage.getItem('auth-token'),
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ itemId: itemId }),
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok')
-          }
-          return response.json()
-        })
-        .then((data) => {
-          console.log(data.message)
-        })
-        .catch((error) => {
-          console.error(
-            'There has been a problem with your fetch operation:',
-            error,
-          )
-        })
-    }
+    setCartItems((currentItems) => {
+      const updatedItems = { ...currentItems }
+      if (updatedItems[itemId]) {
+        delete updatedItems[itemId] // Supprimez l'article entièrement, peu importe la quantité
+      }
+      return updatedItems
+    })
   }
 
-  const contextValue = {
-    products,
-    getTotalCartItems,
-    cartItems,
-    addToCart,
-    removeFromCart,
-    getTotalCartAmount,
-    increaseQuantity,
-    decreaseQuantity,
+  // Calcul du total du panier
+  const getTotalCartAmount = () => {
+    return Object.values(cartItems).reduce((total, currentItem) => {
+      const product = products.find((product) => product._id === currentItem.id)
+      return total + (product ? product.new_price * currentItem.quantity : 0)
+    }, 0)
   }
+
+  // Calcul du nombre total d'articles dans le panier
+  const getTotalCartItems = () => {
+    return Object.values(cartItems).reduce(
+      (total, item) => total + item.quantity,
+      0,
+    )
+  }
+
   return (
     <ShopContext.Provider
-      value={{ ...contextValue, setCartItems, getDefaultCart }}
+      value={{
+        products,
+        addToCart,
+        removeFromCart,
+        getTotalCartAmount,
+        getTotalCartItems,
+        increaseQuantity,
+        decreaseQuantity,
+        resetCart,
+        cartItems,
+      }}
     >
       {props.children}
     </ShopContext.Provider>

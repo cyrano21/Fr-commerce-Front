@@ -7,8 +7,6 @@ import cross_icon from '../assets/cart_cross_icon.png' // Assurez-vous que le ch
 const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL
 
 const CartItems = () => {
-  console.log('État actuel de cartItems :', cartItems)
-
   const navigate = useNavigate()
   const {
     cartItems,

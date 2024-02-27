@@ -15,7 +15,7 @@ const ShopContextProvider = (props) => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get(
-            `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/allproducts`,
+          `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/allproducts`,
         )
         setProducts(response.data.products)
       } catch (error) {
@@ -62,14 +62,14 @@ const ShopContextProvider = (props) => {
   const resetCart = () => {
     setCartItems(getDefaultCart())
   }
-  const addToCart = ({ itemId, size, quantity = 1, image }) => {
+  const addToCart = (product) => {
+    const { itemId, size, quantity = 1, image } = product
     setCartItems((currentItems) => {
       const newItem = currentItems[itemId] || { quantity: 0, size, image } // Ajoutez l'image ici
       newItem.quantity += quantity
       return { ...currentItems, [itemId]: newItem }
     })
   }
-
   const removeFromCart = (itemId) => {
     setCartItems((currentItems) => {
       const updatedItems = { ...currentItems }
@@ -82,36 +82,36 @@ const ShopContextProvider = (props) => {
 
   // Calcul du total du panier
   const getTotalCartAmount = () => {
-    return Object.values(cartItems).reduce((total, currentItem) => {
-      const product = products.find((product) => product._id === currentItem.id)
-      return total + (product ? product.new_price * currentItem.quantity : 0)
+    return Object.values(cartItems).reduce((total, Item) => {
+      const product = products.find((product) => product._id === Item.id)
+      return total + (product ? product.new_price * Item.quantity : 0)
     }, 0)
   }
 
   // Calcul du nombre total d'articles dans le panier
   const getTotalCartItems = () => {
     return Object.values(cartItems).reduce(
-        (total, item) => total + item.quantity,
-        0,
+      (total, item) => total + item.quantity,
+      0,
     )
   }
 
   return (
-      <ShopContext.Provider
-          value={{
-            products,
-            addToCart,
-            removeFromCart,
-            getTotalCartAmount,
-            getTotalCartItems,
-            increaseQuantity,
-            decreaseQuantity,
-            resetCart,
-            cartItems,
-          }}
-      >
-        {props.children}
-      </ShopContext.Provider>
+    <ShopContext.Provider
+      value={{
+        products,
+        addToCart,
+        removeFromCart,
+        getTotalCartAmount,
+        getTotalCartItems,
+        increaseQuantity,
+        decreaseQuantity,
+        resetCart,
+        cartItems,
+      }}
+    >
+      {props.children}
+    </ShopContext.Provider>
   )
 }
 

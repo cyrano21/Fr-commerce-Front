@@ -1,8 +1,9 @@
-import { useContext } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import axios from 'axios' // Utilisez axiosInstance si vous avez une configuration spécifique
 import { ShopContext } from '../Context/ShopContext.jsx'
 import { useNavigate } from 'react-router-dom'
-import cross_icon from '../assets/cart_cross_icon.png' // Assurez-vous que le chemin est correct
+import cross_icon from '../assets/cart_cross_icon.png'
+import * as console from 'console' // Assurez-vous que le chemin est correct
 
 const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL
 
@@ -19,15 +20,19 @@ const CartItems = () => {
     products,
   } = useContext(ShopContext)
 
-  console.log('products:', products)
-  console.log('cartItems:', cartItems)
+  const [isLoading, setIsLoading] = useState(true)
 
-  console.log(
-    'products.filter((product) => cartItems[product._id] > 0):',
-    products.filter((product) => cartItems[product._id] > 0),
-  )
+  useEffect(() => {
+    if (products.length > 0 && Object.keys(cartItems).length > 0) {
+      setIsLoading(false)
+    }
+  }, [products, cartItems])
 
   const handleCheckout = async () => {
+    if (products.length === 0 || Object.keys(cartItems).length === 0) {
+      console.log('Le panier est vide.')
+      return
+    }
     const saleItems = products
       .filter((product) => cartItems[product._id] > 0)
       .map((product) => ({
@@ -37,7 +42,7 @@ const CartItems = () => {
       }))
 
     try {
-      await axios.post(
+      const response = await axios.post(
         `${backendUrl}/completePurchase`,
         { items: saleItems },
         {
@@ -46,12 +51,18 @@ const CartItems = () => {
           },
         },
       )
-
-      setCartItems(getDefaultCart()) // Réinitialiser le panier
-      navigate('/payment') // Rediriger vers la page de paiement avec indication de succès
+      if (response.status === 200) {
+        setCartItems(getDefaultCart()) // Réinitialiser le panier
+        navigate('/payment') // Rediriger vers la page de paiement avec indication de succès
+      }
     } catch (error) {
       console.error("Erreur lors de la finalisation de l'achat:", error)
+      alert("Une erreur s'est produite lors de la finalisation de l'achat.")
     }
+  }
+
+  if (isLoading) {
+    return <div>Chargement...</div>
   }
 
   return (
@@ -71,9 +82,7 @@ const CartItems = () => {
             (product) =>
               cartItems[product._id] && cartItems[product._id].quantity > 0,
           )
-
           .map((product) => {
-            console.log("URL de l'image pour le produit :", product.image)
             return (
               <div key={product._id} className="cartitems-format">
                 <img

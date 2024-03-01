@@ -1,4 +1,5 @@
 @charset "UTF-8";
+@import 'react-toastify/dist/ReactToastify.css';
 * {
   margin: 0;
 }
@@ -1447,6 +1448,19 @@ code {
   color: white;
   cursor: pointer;
 }
+.cartitems .cartitems-down .cart-item-removing {
+  animation: fadeOut 0.5s ease-out forwards;
+}
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-20%);
+  }
+}
 @media (max-width: 1280px) {
   .cartitems {
     margin: 60px 50px;
@@ -1579,6 +1593,23 @@ code {
     width: 90%;
   }
 }
+.notification {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #f44336;
+  color: white;
+  padding: 16px;
+  z-index: 1000;
+}
+.notification button {
+  margin-left: 8px;
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
 .shopcategory .shopcategory-banner {
   display: block;
   margin: 30px auto;

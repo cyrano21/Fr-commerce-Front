@@ -1,0 +1,17 @@
+.notification {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #f44336; // Rouge pour l'exemple
+  color: white;
+  padding: 16px;
+  z-index: 1000;
+
+  button {
+    margin-left: 8px;
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+  }
+}

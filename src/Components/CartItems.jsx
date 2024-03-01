@@ -20,47 +20,49 @@ const CartItems = () => {
 
   const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {
-    const fetchProductsDetails = async () => {
-      setIsLoading(true)
-      try {
-        const response = await axios.post(`${backendUrl}/products/details`, {
-          ids: Object.keys(cartItems),
-        })
-        console.log('response.data:', response.data)
-        const details = response.data
-        const updateCartItemsWithDetails = (productsDetails) => {
-          const updatedCartItems = { ...cartItems }
-          productsDetails.forEach((product) => {
-            if (updatedCartItems[product._id]) {
-              updatedCartItems[product._id] = {
-                ...updatedCartItems[product._id],
-                name: product.name,
-                image: product.image,
-                price: product.new_price, // Utiliser new_price ici
-              }
+  const fetchProductsDetails = async () => {
+    setIsLoading(true)
+    try {
+      const response = await axios.post(`${backendUrl}/products/details`, {
+        ids: Object.keys(cartItems),
+      })
+      console.log('response.data:', response.data)
+      const details = response.data
+      const updateCartItemsWithDetails = (productsDetails) => {
+        const updatedCartItems = { ...cartItems }
+        productsDetails.forEach((product) => {
+          if (product._id && updatedCartItems[product._id]) {
+            updatedCartItems[product._id] = {
+              ...updatedCartItems[product._id],
+              name: product.name,
+              image: product.image,
+              price: product.new_price, // Utiliser new_price ici
             }
-          })
-          setCartItems(updatedCartItems)
-        }
-
-        updateCartItemsWithDetails(details)
-      } catch (error) {
-        if (error.response.status === 429) {
-          console.error(
-            'Nous avons atteint la limite de taux. Réessayez plus tard.',
-          )
-        } else {
-          console.error('Une erreur est survenue', error)
-        }
+          }
+        })
+        setCartItems(updatedCartItems)
       }
-      setIsLoading(false)
-    }
 
-    if (Object.keys(cartItems).length > 0) {
+      updateCartItemsWithDetails(details)
+    } catch (error) {
+      if (error.response && error.response.status === 429) {
+        console.error(
+          'Nous avons atteint la limite de taux. Réessayez plus tard.',
+        )
+      } else {
+        console.error('Une erreur est survenue', error)
+      }
+    }
+    setIsLoading(false)
+  }
+
+  useEffect(() => {
+    // Filtrer pour s'assurer que tous les ids sont valides
+    const validIds = Object.keys(cartItems).filter((id) => id !== 'undefined')
+    if (validIds.length > 0) {
       fetchProductsDetails()
     }
-  }, [])
+  }, [JSON.stringify(Object.keys(cartItems))])
 
   if (isLoading) {
     return <div>Chargement...</div>
@@ -86,13 +88,13 @@ const CartItems = () => {
               alt={item.name}
             />
             <p className="cartitems-product-title">{item.name}</p>
-            <p>${item.new_price}</p>
+            <p>${item.price}</p>
             <div className="cartitems-quantity">
               <button onClick={() => decreaseQuantity(id)}>-</button>
               <span>{Number.isFinite(item.quantity) ? item.quantity : 0}</span>
               <button onClick={() => increaseQuantity(id)}>+</button>
             </div>
-            <span>${item.new_price * item.quantity}</span>
+            <span>${item.price * item.quantity}</span>
             <img
               onClick={() => removeFromCart(id)}
               className="cartitems-remove-icon"

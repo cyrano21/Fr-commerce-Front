@@ -1,9 +1,12 @@
-import React, { createContext, useState, useEffect } from 'react'
+import { createContext, useState, useEffect } from 'react'
 import axios from 'axios'
+import Notification from '../Components/Notification'
 
 export const ShopContext = createContext()
 
 const ShopContextProvider = ({ children }) => {
+  const [notification, setNotification] = useState('')
+  const [removingItems, setRemovingItems] = useState({})
   const [products, setProducts] = useState([])
   const [cartItems, setCartItems] = useState(() => {
     const localData = localStorage.getItem('cartItems')
@@ -29,20 +32,51 @@ const ShopContextProvider = ({ children }) => {
   }, [cartItems])
 
   const addToCart = (product, quantity = 1) => {
+    console.log('Produit à ajouter :', product)
+
+    const productId = product._id || product.itemId
+    if (!productId) {
+      console.error("Produit sans ID valide, impossible d'ajouter au panier.")
+      return
+    }
+
     setCartItems((prev) => {
-      const newItem = prev[product._id]
+      const newItem = prev[productId]
         ? {
-            ...prev[product._id],
-            quantity: prev[product._id].quantity + quantity,
-            price: product.new_price, // Utiliser new_price ici
+            ...prev[productId],
+            quantity: prev[productId].quantity + quantity,
+            price: product.price,
           }
         : {
             ...product,
             quantity,
-            price: product.new_price, // Utiliser new_price ici
+            price: product.price,
           }
-      return { ...prev, [product._id]: newItem }
+
+      console.log('Ajout au panier :', productId, quantity)
+      return { ...prev, [productId]: newItem }
     })
+  }
+
+  const removeFromCart = (id) => {
+    setRemovingItems((prev) => ({ ...prev, [id]: true }))
+    // Affichage d'une notification de confirmation
+    setNotification('Produit retiré du panier')
+
+    setTimeout(() => {
+      setCartItems((prev) => {
+        const newCartItems = { ...prev }
+        delete newCartItems[id]
+        return newCartItems
+      })
+
+      // Retirer l'état de suppression
+      setRemovingItems((prev) => {
+        const newRemovingItems = { ...prev }
+        delete newRemovingItems[id]
+        return newRemovingItems
+      })
+    }, 500) // Assurez-vous que cette durée correspond à celle de votre animation CSS
   }
 
   const increaseQuantity = (id) => {
@@ -67,13 +101,6 @@ const ShopContextProvider = ({ children }) => {
         }
       }
       // Gestion de la suppression de l'article si la quantité est 1 ou moins
-      const { [id]: _, ...rest } = prev
-      return rest
-    })
-  }
-
-  const removeFromCart = (id) => {
-    setCartItems((prev) => {
       const { [id]: _, ...rest } = prev
       return rest
     })
@@ -116,6 +143,10 @@ const ShopContextProvider = ({ children }) => {
       }}
     >
       {children}
+      <Notification
+        message={notification}
+        onClose={() => setNotification('')}
+      />
     </ShopContext.Provider>
   )
 }

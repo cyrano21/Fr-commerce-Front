@@ -118,6 +118,22 @@
         }
       }
     }
+    .cart-item-removing {
+      animation: fadeOut 0.5s ease-out forwards;
+    }
+
+    @keyframes fadeOut {
+      from {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateX(-20%);
+      }
+    }
+
+
   }
 
   @media (max-width: 1280px) {

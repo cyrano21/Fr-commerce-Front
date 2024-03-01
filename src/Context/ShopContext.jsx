@@ -33,9 +33,14 @@ const ShopContextProvider = ({ children }) => {
       const newItem = prev[product._id]
         ? {
             ...prev[product._id],
-            quantity: prev[product._id].quantity + quantity,
+            quantity: prev[product._id].quantity + 1,
+            price: parseFloat(product.new_price), // Convertissez le prix en nombre
           }
-        : { ...product, quantity }
+        : {
+            ...product,
+            quantity,
+            price: parseFloat(product.new_price), // Assurez-vous que le prix est un nombre
+          }
       return { ...prev, [product._id]: newItem }
     })
   }
@@ -43,18 +48,27 @@ const ShopContextProvider = ({ children }) => {
   const increaseQuantity = (id) => {
     setCartItems((prev) => ({
       ...prev,
-      [id]: { ...prev[id], quantity: prev[id].quantity + 1 },
+      [id]: {
+        ...prev[id],
+        quantity: prev[id].quantity + 1, // Ici, prev[id].quantity doit être un nombre
+      },
     }))
   }
 
   const decreaseQuantity = (id) => {
     setCartItems((prev) => {
-      const currentQuantity = prev[id].quantity
-      if (currentQuantity === 1) {
-        const { [id]: _, ...rest } = prev
-        return rest
+      if (prev[id].quantity > 1) {
+        return {
+          ...prev,
+          [id]: {
+            ...prev[id],
+            quantity: prev[id].quantity - 1, // Assurez-vous que ceci ne devient pas NaN
+          },
+        }
       }
-      return { ...prev, [id]: { ...prev[id], quantity: currentQuantity - 1 } }
+      // Gestion de la suppression de l'article si la quantité est 1 ou moins
+      const { [id]: _, ...rest } = prev
+      return rest
     })
   }
 
@@ -74,10 +88,17 @@ const ShopContextProvider = ({ children }) => {
   }
 
   const getTotalCartAmount = () => {
-    return Object.values(cartItems).reduce(
-      (total, item) => total + item.price * item.quantity,
-      0,
-    )
+    return Object.values(cartItems).reduce((total, item) => {
+      const price = item.price || item.new_price // Utilisez new_price avec un fallback sur price
+      if (
+        typeof price === 'number' &&
+        price > 0 &&
+        Number.isFinite(item.quantity)
+      ) {
+        return total + price * item.quantity
+      }
+      return total
+    }, 0)
   }
 
   return (

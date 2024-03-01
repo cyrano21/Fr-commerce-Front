@@ -24,19 +24,34 @@ const CartItems = () => {
     const fetchProductsDetails = async () => {
       setIsLoading(true)
       try {
-        // Supposons que vous envoyez les ID des produits dans le corps de la requête
         const response = await axios.post(`${backendUrl}/products/details`, {
           ids: Object.keys(cartItems),
         })
         console.log('response.data:', response.data)
-        const details = response.data // Assurez-vous que le backend renvoie un tableau de produits
-        // Mise à jour de cartItems ici avec les détails récupérés
+        const details = response.data
+        const updateCartItemsWithDetails = (productsDetails) => {
+          const updatedCartItems = { ...cartItems }
+          productsDetails.forEach((product) => {
+            if (updatedCartItems[product._id]) {
+              updatedCartItems[product._id] = {
+                ...updatedCartItems[product._id],
+                name: product.name,
+                image: product.image,
+                price: product.new_price, // Utilisez new_price ici
+              }
+            }
+          })
+          setCartItems(updatedCartItems)
+        }
         updateCartItemsWithDetails(details)
       } catch (error) {
-        console.error(
-          'Erreur lors de la récupération des détails des produits:',
-          error,
-        )
+        if (error.response.status === 429) {
+          console.error(
+            'Nous avons atteint la limite de taux. Réessayez plus tard.',
+          )
+        } else {
+          console.error('Une erreur est survenue', error)
+        }
       }
       setIsLoading(false)
     }
@@ -44,22 +59,7 @@ const CartItems = () => {
     if (Object.keys(cartItems).length > 0) {
       fetchProductsDetails()
     }
-  }, [cartItems, setCartItems]) // Ajout de setCartItems comme dépendance pour assurer la mise à jour correcte
-
-  const updateCartItemsWithDetails = (productsDetails) => {
-    const updatedCartItems = { ...cartItems }
-    productsDetails.forEach((product) => {
-      if (updatedCartItems[product._id]) {
-        updatedCartItems[product._id] = {
-          ...updatedCartItems[product._id],
-          name: product.name,
-          image: product.image,
-          price: product.price,
-        }
-      }
-    })
-    setCartItems(updatedCartItems)
-  }
+  }, [])
 
   if (isLoading) {
     return <div>Chargement...</div>
@@ -88,7 +88,7 @@ const CartItems = () => {
             <p>${item.price}</p>
             <div className="cartitems-quantity">
               <button onClick={() => decreaseQuantity(id)}>-</button>
-              <span>{item.quantity}</span>
+              <span>{Number.isFinite(item.quantity) ? item.quantity : 0}</span>
               <button onClick={() => increaseQuantity(id)}>+</button>
             </div>
             <span>${item.price * item.quantity}</span>

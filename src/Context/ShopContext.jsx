@@ -33,13 +33,13 @@ const ShopContextProvider = ({ children }) => {
       const newItem = prev[product._id]
         ? {
             ...prev[product._id],
-            quantity: prev[product._id].quantity + 1,
-            price: parseFloat(product.new_price), // Convertissez le prix en nombre
+            quantity: prev[product._id].quantity + quantity,
+            price: product.new_price, // Utiliser new_price ici
           }
         : {
             ...product,
             quantity,
-            price: parseFloat(product.new_price), // Assurez-vous que le prix est un nombre
+            price: product.new_price, // Utiliser new_price ici
           }
       return { ...prev, [product._id]: newItem }
     })

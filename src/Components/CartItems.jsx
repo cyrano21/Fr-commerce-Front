@@ -37,12 +37,13 @@ const CartItems = () => {
                 ...updatedCartItems[product._id],
                 name: product.name,
                 image: product.image,
-                price: product.new_price, // Utilisez new_price ici
+                price: product.new_price, // Utiliser new_price ici
               }
             }
           })
           setCartItems(updatedCartItems)
         }
+
         updateCartItemsWithDetails(details)
       } catch (error) {
         if (error.response.status === 429) {
@@ -85,13 +86,13 @@ const CartItems = () => {
               alt={item.name}
             />
             <p className="cartitems-product-title">{item.name}</p>
-            <p>${item.price}</p>
+            <p>${item.new_price}</p>
             <div className="cartitems-quantity">
               <button onClick={() => decreaseQuantity(id)}>-</button>
               <span>{Number.isFinite(item.quantity) ? item.quantity : 0}</span>
               <button onClick={() => increaseQuantity(id)}>+</button>
             </div>
-            <span>${item.price * item.quantity}</span>
+            <span>${item.new_price * item.quantity}</span>
             <img
               onClick={() => removeFromCart(id)}
               className="cartitems-remove-icon"

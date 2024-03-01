@@ -1,9 +1,8 @@
 import { useContext, useEffect, useState } from 'react'
-import axios from 'axios' // Utilisez axiosInstance si vous avez une configuration spécifique
-import { ShopContext } from '../Context/ShopContext.jsx'
+import axios from 'axios'
+import { ShopContext } from '../Context/ShopContext'
 import { useNavigate } from 'react-router-dom'
 import cross_icon from '../assets/cart_cross_icon.png'
-import * as console from 'console' // Assurez-vous que le chemin est correct
 
 const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL
 
@@ -12,53 +11,54 @@ const CartItems = () => {
   const {
     cartItems,
     removeFromCart,
-    getTotalCartAmount,
     increaseQuantity,
     decreaseQuantity,
+    getTotalCartAmount,
     setCartItems,
-    getDefaultCart,
-    products,
   } = useContext(ShopContext)
+  console.log('cartItems:', cartItems)
 
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    if (products.length > 0 && Object.keys(cartItems).length > 0) {
+    const fetchProductsDetails = async () => {
+      setIsLoading(true)
+      try {
+        // Supposons que vous envoyez les ID des produits dans le corps de la requête
+        const response = await axios.post(`${backendUrl}/products/details`, {
+          ids: Object.keys(cartItems),
+        })
+        console.log('response.data:', response.data)
+        const details = response.data // Assurez-vous que le backend renvoie un tableau de produits
+        // Mise à jour de cartItems ici avec les détails récupérés
+        updateCartItemsWithDetails(details)
+      } catch (error) {
+        console.error(
+          'Erreur lors de la récupération des détails des produits:',
+          error,
+        )
+      }
       setIsLoading(false)
     }
-  }, [products, cartItems])
 
-  const handleCheckout = async () => {
-    if (products.length === 0 || Object.keys(cartItems).length === 0) {
-      console.log('Le panier est vide.')
-      return
+    if (Object.keys(cartItems).length > 0) {
+      fetchProductsDetails()
     }
-    const saleItems = products
-      .filter((product) => cartItems[product._id] > 0)
-      .map((product) => ({
-        productId: product._id,
-        quantity: cartItems[product._id],
-        price: product.new_price,
-      }))
+  }, [cartItems, setCartItems]) // Ajout de setCartItems comme dépendance pour assurer la mise à jour correcte
 
-    try {
-      const response = await axios.post(
-        `${backendUrl}/completePurchase`,
-        { items: saleItems },
-        {
-          headers: {
-            'auth-token': localStorage.getItem('auth-token'),
-          },
-        },
-      )
-      if (response.status === 200) {
-        setCartItems(getDefaultCart()) // Réinitialiser le panier
-        navigate('/payment') // Rediriger vers la page de paiement avec indication de succès
+  const updateCartItemsWithDetails = (productsDetails) => {
+    const updatedCartItems = { ...cartItems }
+    productsDetails.forEach((product) => {
+      if (updatedCartItems[product._id]) {
+        updatedCartItems[product._id] = {
+          ...updatedCartItems[product._id],
+          name: product.name,
+          image: product.image,
+          price: product.price,
+        }
       }
-    } catch (error) {
-      console.error("Erreur lors de la finalisation de l'achat:", error)
-      alert("Une erreur s'est produite lors de la finalisation de l'achat.")
-    }
+    })
+    setCartItems(updatedCartItems)
   }
 
   if (isLoading) {
@@ -77,43 +77,30 @@ const CartItems = () => {
       </div>
       <hr />
       <div className="cartitems-list">
-        {products
-          .filter(
-            (product) =>
-              cartItems[product._id] && cartItems[product._id].quantity > 0,
-          )
-          .map((product) => {
-            return (
-              <div key={product._id} className="cartitems-format">
-                <img
-                  className="cartitems-product-icon"
-                  src={product.image}
-                  alt={product.name}
-                />
-
-                <p className="cartitems-product-title">{product.name}</p>
-                <p>${product.new_price}</p>
-                <div className="cartitems-quantity">
-                  <button onClick={() => decreaseQuantity(product._id)}>
-                    -
-                  </button>
-                  <span>{cartItems[product._id].quantity}</span>
-                  <button onClick={() => increaseQuantity(product._id)}>
-                    +
-                  </button>
-                </div>
-                <p>${product.new_price * cartItems[product._id].quantity}</p>
-                <img
-                  onClick={() => removeFromCart(product._id)}
-                  className="cartitems-remove-icon"
-                  src={cross_icon}
-                  alt="remove"
-                />
-              </div>
-            )
-          })}
+        {Object.entries(cartItems).map(([id, item]) => (
+          <div key={id} className="cartitems-format">
+            <img
+              className="cartitems-product-icon"
+              src={item.image}
+              alt={item.name}
+            />
+            <p className="cartitems-product-title">{item.name}</p>
+            <p>${item.price}</p>
+            <div className="cartitems-quantity">
+              <button onClick={() => decreaseQuantity(id)}>-</button>
+              <span>{item.quantity}</span>
+              <button onClick={() => increaseQuantity(id)}>+</button>
+            </div>
+            <span>${item.price * item.quantity}</span>
+            <img
+              onClick={() => removeFromCart(id)}
+              className="cartitems-remove-icon"
+              src={cross_icon}
+              alt="remove"
+            />
+          </div>
+        ))}
       </div>
-
       <div className="cartitems-down">
         <div className="cartitems-total">
           <h1>Total du panier</h1>
@@ -133,7 +120,9 @@ const CartItems = () => {
               <h3>${getTotalCartAmount()}</h3>
             </div>
           </div>
-          <button onClick={handleCheckout}>PASSER À LA CAISSE</button>
+          <button onClick={() => navigate('/payment')}>
+            PASSER À LA CAISSE
+          </button>
         </div>
         <div className="cartitems-promocode">
           <p>Si vous avez un code promo, saisissez-le ici</p>

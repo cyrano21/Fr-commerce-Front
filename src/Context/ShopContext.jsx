@@ -1,16 +1,15 @@
-import { createContext, useState, useEffect } from 'react'
-import axios from 'axios' // Assurez-vous d'avoir axios installé
+import React, { createContext, useState, useEffect } from 'react'
+import axios from 'axios'
 
 export const ShopContext = createContext()
 
-const ShopContextProvider = (props) => {
+const ShopContextProvider = ({ children }) => {
   const [products, setProducts] = useState([])
-  // Initialiser cartItems avec les données de localStorage si disponibles
-  const initialCartItems = JSON.parse(localStorage.getItem('cartItems')) || {}
-  const [cartItems, setCartItems] = useState(initialCartItems)
+  const [cartItems, setCartItems] = useState(() => {
+    const localData = localStorage.getItem('cartItems')
+    return localData ? JSON.parse(localData) : {}
+  })
 
-  const getDefaultCart = () => ({})
-  // Chargez vos produits ici
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -26,72 +25,57 @@ const ShopContextProvider = (props) => {
   }, [])
 
   useEffect(() => {
-    // Sauvegarder cartItems dans localStorage chaque fois que cartItems change
     localStorage.setItem('cartItems', JSON.stringify(cartItems))
   }, [cartItems])
 
-  const increaseQuantity = (itemId) => {
+  const addToCart = (product, quantity = 1) => {
     setCartItems((prev) => {
-      const item = prev[itemId] || { quantity: 0 }
-      item.quantity += 1
-      return { ...prev, [itemId]: item }
+      const newItem = prev[product._id]
+        ? {
+            ...prev[product._id],
+            quantity: prev[product._id].quantity + quantity,
+          }
+        : { ...product, quantity }
+      return { ...prev, [product._id]: newItem }
     })
   }
 
-  const decreaseQuantity = (itemId) => {
+  const increaseQuantity = (id) => {
+    setCartItems((prev) => ({
+      ...prev,
+      [id]: { ...prev[id], quantity: prev[id].quantity + 1 },
+    }))
+  }
+
+  const decreaseQuantity = (id) => {
     setCartItems((prev) => {
-      const item = prev[itemId]
-      // Vérifier d'abord si l'article existe et a une quantité.
-      if (item) {
-        // Décrémenter la quantité
-        item.quantity -= 1
-        // Si la quantité est maintenant 0, supprimer l'article du panier
-        if (item.quantity < 1) {
-          const updatedItems = { ...prev }
-          delete updatedItems[itemId]
-          return updatedItems
-        }
-        // Sinon, retourner le panier mis à jour avec la quantité décrémentée
-        return { ...prev, [itemId]: item }
+      const currentQuantity = prev[id].quantity
+      if (currentQuantity === 1) {
+        const { [id]: _, ...rest } = prev
+        return rest
       }
-      // Si l'article n'existe pas, retourner simplement l'état actuel
-      return prev
+      return { ...prev, [id]: { ...prev[id], quantity: currentQuantity - 1 } }
     })
   }
 
-  const resetCart = () => {
-    setCartItems(getDefaultCart())
-  }
-  const addToCart = (product) => {
-    const { itemId, size, quantity = 1, image } = product
-    setCartItems((currentItems) => {
-      const newItem = currentItems[itemId] || { quantity: 0, size, image } // Ajoutez l'image ici
-      newItem.quantity += quantity
-      return { ...currentItems, [itemId]: newItem }
-    })
-  }
-  const removeFromCart = (itemId) => {
-    setCartItems((currentItems) => {
-      const updatedItems = { ...currentItems }
-      if (updatedItems[itemId]) {
-        delete updatedItems[itemId] // Supprimez l'article entièrement, peu importe la quantité
-      }
-      return updatedItems
+  const removeFromCart = (id) => {
+    setCartItems((prev) => {
+      const { [id]: _, ...rest } = prev
+      return rest
     })
   }
 
-  // Calcul du total du panier
-  const getTotalCartAmount = () => {
-    return Object.values(cartItems).reduce((total, Item) => {
-      const product = products.find((product) => product._id === Item.id)
-      return total + (product ? product.new_price * Item.quantity : 0)
-    }, 0)
-  }
-
-  // Calcul du nombre total d'articles dans le panier
+  // Dans ShopContextProvider
   const getTotalCartItems = () => {
     return Object.values(cartItems).reduce(
       (total, item) => total + item.quantity,
+      0,
+    )
+  }
+
+  const getTotalCartAmount = () => {
+    return Object.values(cartItems).reduce(
+      (total, item) => total + item.price * item.quantity,
       0,
     )
   }
@@ -100,17 +84,17 @@ const ShopContextProvider = (props) => {
     <ShopContext.Provider
       value={{
         products,
+        cartItems,
         addToCart,
+        increaseQuantity,
+        decreaseQuantity,
         removeFromCart,
         getTotalCartAmount,
         getTotalCartItems,
-        increaseQuantity,
-        decreaseQuantity,
-        resetCart,
-        cartItems,
+        setCartItems, // In case you need to reset or update cartItems directly from components
       }}
     >
-      {props.children}
+      {children}
     </ShopContext.Provider>
   )
 }

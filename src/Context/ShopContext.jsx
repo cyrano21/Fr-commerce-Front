@@ -1,11 +1,9 @@
 import { createContext, useState, useEffect } from 'react'
 import axios from 'axios'
-import Notification from '../Components/Notification'
 
 export const ShopContext = createContext()
 
 const ShopContextProvider = ({ children }) => {
-  const [notification, setNotification] = useState('')
   const [removingItems, setRemovingItems] = useState({})
   const [products, setProducts] = useState([])
   const [cartItems, setCartItems] = useState(() => {
@@ -59,9 +57,8 @@ const ShopContextProvider = ({ children }) => {
   }
 
   const removeFromCart = (id) => {
+    const removedItemName = cartItems[id].name // Capturez le nom avant suppression
     setRemovingItems((prev) => ({ ...prev, [id]: true }))
-    // Affichage d'une notification de confirmation
-    setNotification('Produit retiré du panier')
 
     setTimeout(() => {
       setCartItems((prev) => {
@@ -70,12 +67,14 @@ const ShopContextProvider = ({ children }) => {
         return newCartItems
       })
 
-      // Retirer l'état de suppression
       setRemovingItems((prev) => {
         const newRemovingItems = { ...prev }
         delete newRemovingItems[id]
         return newRemovingItems
       })
+
+      // Après la suppression, mettez à jour lastRemovedItem pour déclencher la notification
+      setLastRemovedItem({ id, name: removedItemName })
     }, 500) // Assurez-vous que cette durée correspond à celle de votre animation CSS
   }
 
@@ -143,10 +142,6 @@ const ShopContextProvider = ({ children }) => {
       }}
     >
       {children}
-      <Notification
-        message={notification}
-        onClose={() => setNotification('')}
-      />
     </ShopContext.Provider>
   )
 }

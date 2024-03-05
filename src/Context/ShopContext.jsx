@@ -33,9 +33,15 @@ const ShopContextProvider = ({ children }) => {
 
   const fetchCart = async () => {
     try {
-      const { data } = await axiosInstance.get('/getuser')
-      if (data && data.user && data.user.cartData) {
-        setCartItems(data.user.cartData)
+      const { data } = await axiosInstance.get('/getcart')
+      console.log(data) // Assurez-vous que cette réponse correspond à la nouvelle structure
+      if (data && Array.isArray(data)) {
+        const cartItemsObject = data.reduce((acc, item) => {
+          const { productId, quantity } = item
+          acc[productId] = { ...item, quantity }
+          return acc
+        }, {})
+        setCartItems(cartItemsObject)
       }
     } catch (error) {
       console.error('Erreur lors de la récupération du panier:', error)
@@ -81,17 +87,30 @@ const ShopContextProvider = ({ children }) => {
   }
 
   const getTotalCartAmount = () => {
-    return Object.values(cartItems).reduce((acc, { quantity, productId }) => {
-      const product = products.find((product) => product._id === productId)
-      return acc + (product ? product.price * quantity : 0)
+    // S'assurer que cartItems est un objet avant de procéder
+    if (!cartItems) return 0
+
+    return Object.values(cartItems).reduce((acc, item) => {
+      // S'assurer que l'élément et le produit existent avant d'accéder à `quantity` et `price`
+      if (!item || !products) return acc
+
+      const product = products.find((product) => product._id === item.productId)
+      return product ? acc + product.price * item.quantity : acc
     }, 0)
   }
 
   const getTotalCartItems = () => {
-    return Object.values(cartItems).reduce(
-      (acc, item) => acc + item.quantity,
-      0,
-    )
+    if (!cartItems) return 0
+
+    return Object.values(cartItems).reduce((acc, item) => {
+      // Vérifie si l'item est défini et contient la propriété quantity avant de procéder
+      if (!item || typeof item.quantity === 'undefined') return acc
+
+      const product = products.find((product) => product._id === item.productId)
+      if (!product) return acc
+
+      return acc + product.price * item.quantity
+    }, 0)
   }
 
   return (

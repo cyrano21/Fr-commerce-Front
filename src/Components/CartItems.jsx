@@ -31,17 +31,19 @@ const CartItems = () => {
           <div key={id} className="cartitems-format">
             <img
               className="cartitems-product-icon"
-              src={item.image}
-              alt={item.name}
+              src={item?.image ?? 'default_image.jpg'} // Utilisez l'image par défaut si `item.image` est undefined
+              alt={item?.name ?? 'Nom du produit'}
             />
-            <p className="cartitems-product-title">{item.name}</p>
-            <p>${item.price}</p>
+            <p className="cartitems-product-title">
+              {item?.name ?? 'Nom inconnu'}
+            </p>
+            <p>${item?.price ?? 0}</p>
             <div className="cartitems-quantity">
               <button onClick={() => decreaseQuantity(id)}>-</button>
-              <span>{item.quantity}</span>
+              <span>{item?.quantity ?? 0}</span>
               <button onClick={() => increaseQuantity(id)}>+</button>
             </div>
-            <span>${item.price * item.quantity}</span>
+            <span>${item?.price * (item?.quantity ?? 0)}</span>
             <img
               onClick={() => handleRemoveClick(id)}
               className="cartitems-remove-icon"

@@ -87,6 +87,13 @@ const ShopContextProvider = ({ children }) => {
     }, 0)
   }
 
+  const getTotalCartItems = () => {
+    return Object.values(cartItems).reduce(
+      (acc, item) => acc + item.quantity,
+      0,
+    )
+  }
+
   return (
     <ShopContext.Provider
       value={{
@@ -97,6 +104,7 @@ const ShopContextProvider = ({ children }) => {
         increaseQuantity,
         decreaseQuantity,
         getTotalCartAmount,
+        getTotalCartItems,
       }}
     >
       {children}

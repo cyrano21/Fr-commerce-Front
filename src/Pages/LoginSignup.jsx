@@ -1,37 +1,48 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import axiosInstance from '/axiosConfig'
 
 const LoginSignup = () => {
+  const navigate = useNavigate()
   const [state, setState] = useState('Login')
   const [formData, setFormData] = useState({
     username: '',
     email: '',
     password: '',
   })
+  const [error, setError] = useState('')
+  const [termsAccepted, setTermsAccepted] = useState(false)
 
   const changeHandler = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
+  const termsChangeHandler = (e) => {
+    setTermsAccepted(e.target.checked)
+  }
+
   const login = async () => {
-    // Remplacez fetch par axiosInstance.post
     try {
       const response = await axiosInstance.post('/login', formData)
       localStorage.setItem('auth-token', response.data.token)
-      window.location.replace('/')
+      navigate('/')
     } catch (error) {
-      alert('Erreur lors de la connexion')
+      setError('Erreur lors de la connexion. Veuillez réessayer.')
     }
   }
 
   const signup = async () => {
-    // Identique pour l'inscription
+    if (!termsAccepted) {
+      setError('Veuillez accepter les conditions d’utilisation.')
+      return
+    }
+
     try {
       const response = await axiosInstance.post('/signup', formData)
       localStorage.setItem('auth-token', response.data.token)
-      window.location.replace('/')
+      navigate('/')
     } catch (error) {
-      alert("Erreur lors de l'inscription")
+      setError("Erreur lors de l'inscription. Veuillez réessayer.")
     }
   }
 
@@ -39,8 +50,9 @@ const LoginSignup = () => {
     <div className="loginsignup">
       <div className="loginsignup-container">
         <h1>{state}</h1>
+        {error && <p className="error-message">{error}</p>}
         <div className="loginsignup-fields">
-          {state === 'Sign Up' ? (
+          {state === 'Sign Up' && (
             <input
               type="text"
               placeholder="Votre nom"
@@ -48,8 +60,6 @@ const LoginSignup = () => {
               value={formData.username}
               onChange={changeHandler}
             />
-          ) : (
-            <></>
           )}
           <input
             type="email"
@@ -66,47 +76,41 @@ const LoginSignup = () => {
             onChange={changeHandler}
           />
         </div>
+        {state === 'Sign Up' && (
+          <div className="loginsignup-agree">
+            <input
+              type="checkbox"
+              id="terms"
+              checked={termsAccepted}
+              onChange={termsChangeHandler}
+            />
+            <label htmlFor="terms">
+              En continuant, j'accepte les conditions d'utilisation et la
+              politique de confidentialité.
+            </label>
+          </div>
+        )}
         <button
-          onClick={() => {
-            state === 'Login' ? login() : signup()
-          }}
+          onClick={state === 'Login' ? login : signup}
+          disabled={state === 'Sign Up' && !termsAccepted}
         >
           Continuer
         </button>
 
         {state === 'Login' ? (
           <p className="loginsignup-login">
-            Créer un compte ?
-            <span
-              onClick={() => {
-                setState('Sign Up')
-              }}
-            >
-              Cliquez ici
-            </span>
+            Pas de compte ?
+            <span onClick={() => setState('Sign Up')}> Inscrivez-vous ici</span>
           </p>
         ) : (
           <p className="loginsignup-login">
             Vous avez déjà un compte ?
-            <span
-              onClick={() => {
-                setState('Login')
-              }}
-            >
-              Connectez-vous ici
-            </span>
+            <span onClick={() => setState('Login')}> Connectez-vous ici</span>
           </p>
         )}
-
-        <div className="loginsignup-agree">
-          <input type="checkbox" name="" id="" />
-          <p>
-            En continuant, j`&apos;`accepte les conditions d`&apos;`utilisation
-            et la politique de confidentialité.
-          </p>
-        </div>
       </div>
     </div>
   )
 }
+
 export default LoginSignup

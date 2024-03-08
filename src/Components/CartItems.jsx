@@ -1,16 +1,16 @@
 import { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ShopContext } from '../Context/ShopContext'
-import cross_icon from '../assets/cart_cross_icon.png'
+import crossIcon from '../assets/cart_cross_icon.png'
 import Notification from '../Components/Notification'
 
 const CartItems = () => {
   const navigate = useNavigate()
   const {
-    cartItems,
+    cartItems = { cartData: [] }, // Provide a default value
     removeFromCart,
-    increaseQuantity,
-    decreaseQuantity,
+    incrementQuantity,
+    decrementQuantity,
     calculateTotal,
   } = useContext(ShopContext)
 
@@ -18,13 +18,17 @@ const CartItems = () => {
 
   const [notification, setNotification] = useState('')
 
+  // Correction pour l'utilisation de fonctions nommées correctement
+  // et gestion correcte de l'ID du produit lors de la suppression.
   const handleRemoveClick = (productId) => {
     removeFromCart(productId)
     setNotification('Produit retiré du panier')
     setTimeout(() => setNotification(''), 3000) // Efface la notification après 3 secondes
   }
-  if (!cartItems) {
-    return <div>Chargement du panier...</div>
+
+  // Ajout d'une vérification pour s'assurer que cartItems n'est pas vide
+  if (!cartItems || cartItems.length === 0) {
+    return <div>Le panier est vide.</div>
   }
 
   return (
@@ -34,35 +38,42 @@ const CartItems = () => {
       </div>
       <hr />
       <div className="cartitems-list">
-        {cartItems.map((item, index) => (
-          <div key={index} className="cartitems-format">
-            <img
-              className="cartitems-product-icon"
-              src={item?.image ?? 'default_image.jpg'} // Utilisez l'image par défaut si `item.image` est undefined
-              alt={item?.name ?? 'Nom du produit'}
-            />
-            <p className="cartitems-product-title">
-              {item?.name ?? 'Nom inconnu'}
-            </p>
-            <p>${item?.price ?? 0}</p>
-            <div className="cartitems-quantity">
-              <button onClick={() => decreaseQuantity(item.productId)}>
-                -
-              </button>
-              <span>{item.quantity}</span>
-              <button onClick={() => increaseQuantity(item.productId)}>
-                +
-              </button>
+        {cartItems.cartData &&
+          cartItems.cartData.map((item) => (
+            <div key={item.productId} className="cartitems-format">
+              <img
+                className="cartitems-product-icon"
+                src={item.image || 'default_image.jpg'} // Utilisation de l'image par défaut si `item.image` est undefined
+                alt={item.name || 'Nom du produit'}
+              />
+              <p className="cartitems-product-title">
+                {item.name || 'Nom inconnu'}
+              </p>
+              <p>${item.price || 0}</p>
+              <div className="cartitems-quantity">
+                <button
+                  onClick={() => decrementQuantity(item.productId)}
+                  aria-label="Diminuer la quantité"
+                >
+                  -
+                </button>
+                <span>{item.quantity}</span>
+                <button
+                  onClick={() => incrementQuantity(item.productId)}
+                  aria-label="Augmenter la quantité"
+                >
+                  +
+                </button>
+              </div>
+              <span>${(item.price || 0) * item.quantity}</span>
+              <img
+                onClick={() => handleRemoveClick(item.productId)}
+                className="cartitems-remove-icon"
+                src={crossIcon}
+                alt="remove"
+              />
             </div>
-            <span>${item?.price * (item?.quantity ?? 0)}</span>
-            <img
-              onClick={() => handleRemoveClick(id)}
-              className="cartitems-remove-icon"
-              src={cross_icon}
-              alt="remove"
-            />
-          </div>
-        ))}
+          ))}
       </div>
       <div className="cartitems-down">
         <div className="cartitems-total">

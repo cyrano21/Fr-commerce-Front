@@ -11,24 +11,31 @@ const CartItems = () => {
     removeFromCart,
     increaseQuantity,
     decreaseQuantity,
-    getTotalCartAmount,
+    calculateTotal,
   } = useContext(ShopContext)
+
+  console.log('cartItems', cartItems)
 
   const [notification, setNotification] = useState('')
 
-  const handleRemoveClick = (id) => {
-    removeFromCart(id)
+  const handleRemoveClick = (productId) => {
+    removeFromCart(productId)
     setNotification('Produit retiré du panier')
-    setTimeout(() => setNotification(''), 3000) // Clear notification after 3 seconds
+    setTimeout(() => setNotification(''), 3000) // Efface la notification après 3 secondes
+  }
+  if (!cartItems) {
+    return <div>Chargement du panier...</div>
   }
 
   return (
     <div className="cartitems">
-      <div className="cartitems-format-main">{/* Headers here */}</div>
+      <div className="cartitems-format-main">
+        <h2>Détails du Panier</h2>
+      </div>
       <hr />
       <div className="cartitems-list">
-        {Object.entries(cartItems).map(([id, item]) => (
-          <div key={id} className="cartitems-format">
+        {cartItems.map((item, index) => (
+          <div key={index} className="cartitems-format">
             <img
               className="cartitems-product-icon"
               src={item?.image ?? 'default_image.jpg'} // Utilisez l'image par défaut si `item.image` est undefined
@@ -39,9 +46,13 @@ const CartItems = () => {
             </p>
             <p>${item?.price ?? 0}</p>
             <div className="cartitems-quantity">
-              <button onClick={() => decreaseQuantity(id)}>-</button>
-              <span>{item?.quantity ?? 0}</span>
-              <button onClick={() => increaseQuantity(id)}>+</button>
+              <button onClick={() => decreaseQuantity(item.productId)}>
+                -
+              </button>
+              <span>{item.quantity}</span>
+              <button onClick={() => increaseQuantity(item.productId)}>
+                +
+              </button>
             </div>
             <span>${item?.price * (item?.quantity ?? 0)}</span>
             <img
@@ -59,7 +70,7 @@ const CartItems = () => {
           <div>
             <div className="cartitems-total-item">
               <p>Sous-total</p>
-              <p>${getTotalCartAmount()}</p>
+              <p>${calculateTotal()}</p>
             </div>
             <hr />
             <div className="cartitems-total-item">
@@ -69,7 +80,7 @@ const CartItems = () => {
             <hr />
             <div className="cartitems-total-item">
               <h3>Total</h3>
-              <h3>${getTotalCartAmount()}</h3>
+              <h3>${calculateTotal()}</h3>
             </div>
           </div>
           <button onClick={() => navigate('/payment')}>

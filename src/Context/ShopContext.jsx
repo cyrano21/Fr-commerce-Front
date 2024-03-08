@@ -1,117 +1,92 @@
 import { createContext, useState, useEffect } from 'react'
 import axios from 'axios'
+import PropTypes from 'prop-types'
 
 export const ShopContext = createContext()
 
 const ShopContextProvider = ({ children }) => {
   const [products, setProducts] = useState([])
-  const [cartItems, setCartItems] = useState({})
+  const [cartItems, setCartItems] = useState([])
+  // const [isAuthenticated, setIsAuthenticated] = useState(false)
 
-  // Initialisation de l'instance axios avec le token et l'URL de base
-  const axiosInstance = axios.create({
-    baseURL: import.meta.env.VITE_REACT_APP_BACKEND_URL,
-  })
-
-  // Ajout d'un intercepteur pour inclure le token d'authentification dans chaque requête
-  axiosInstance.interceptors.request.use((config) => {
-    const token = localStorage.getItem('auth-token')
-    config.headers.Authorization = token ? `Bearer ${token}` : ''
-    return config
-  })
+  //  useEffect(() => {
+  //   const token = localStorage.getItem('auth-token')
+  //  setIsAuthenticated(!!token)
+  // if (isAuthenticated) {
+  //    loadCart()
+  //  }
+  // }, [isAuthenticated])
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const { data } = await axiosInstance.get('/allproducts')
-        setProducts(data.products)
-      } catch (error) {
-        console.error('Erreur lors du chargement des produits:', error)
-      }
-    }
     fetchProducts()
+    fetchCartItems()
   }, [])
 
-  const fetchCart = async () => {
+  const axiosInstance = axios.create({
+    baseURL: import.meta.env.VITE_REACT_APP_BACKEND_URL,
+    // headers: { Authorization: `Bearer ${localStorage.getItem('auth-token')}` },
+  })
+
+  const fetchProducts = async () => {
     try {
-      const { data } = await axiosInstance.get('/getcart')
-      console.log(data) // Assurez-vous que cette réponse correspond à la nouvelle structure
-      if (data && Array.isArray(data)) {
-        const cartItemsObject = data.reduce((acc, item) => {
-          const { productId, quantity } = item
-          acc[productId] = { ...item, quantity }
-          return acc
-        }, {})
-        setCartItems(cartItemsObject)
-      }
+      const response = await axiosInstance.get('/allproducts')
+      setProducts(response.data.products)
     } catch (error) {
-      console.error('Erreur lors de la récupération du panier:', error)
+      console.error('Erreur lors du chargement des produits:', error)
     }
   }
 
-  useEffect(() => {
-    fetchCart()
-  }, [])
+  const fetchCartItems = async () => {
+    try {
+      const response = await axiosInstance.get('/getcart')
+      setCartItems(response.data.cartItems)
+    } catch (error) {
+      console.error('Erreur lors du chargement du panier:', error)
+    }
+  }
 
-  const addToCart = async (productId, quantity) => {
+  const addToCart = async (productId, quantity = 1) => {
     try {
       await axiosInstance.post('/addtocart', { productId, quantity })
-      fetchCart()
+      fetchCartItems() // Récupère à nouveau les articles du panier après l'ajout
     } catch (error) {
-      console.error("Erreur lors de l'ajout au panier :", error)
+      console.error("Erreur lors de l'ajout au panier:", error)
     }
   }
 
   const removeFromCart = async (productId) => {
     try {
       await axiosInstance.post('/removefromcart', { productId })
-      fetchCart()
+      fetchCartItems() // Récupère à nouveau les articles du panier après la suppression
     } catch (error) {
-      console.error(
-        "Erreur lors de la suppression de l'article du panier :",
-        error,
-      )
+      console.error('Erreur lors de la suppression du panier:', error)
     }
   }
 
-  const increaseQuantity = (productId) => {
-    addToCart(productId, 1)
+  // loadCart()
+  // }, [isAuthenticated])
+
+  const incrementQuantity = (productId) => {
+    addToCart(productId)
   }
 
-  const decreaseQuantity = async (productId) => {
-    try {
-      await axiosInstance.post('/decreaseQuantity', { productId })
-      fetchCart()
-    } catch (error) {
-      console.error('Error decreasing product quantity in cart: ', error)
+  const decrementQuantity = (productId) => {
+    const item = cartItems.find((item) => item.productId === productId)
+    if (item && item.quantity > 1) {
+      addToCart(productId, -1)
+    } else {
+      removeFromCart(productId)
     }
-  }
-
-  const getTotalCartAmount = () => {
-    // S'assurer que cartItems est un objet avant de procéder
-    if (!cartItems) return 0
-
-    return Object.values(cartItems).reduce((acc, item) => {
-      // S'assurer que l'élément et le produit existent avant d'accéder à `quantity` et `price`
-      if (!item || !products) return acc
-
-      const product = products.find((product) => product._id === item.productId)
-      return product ? acc + product.price * item.quantity : acc
-    }, 0)
   }
 
   const getTotalCartItems = () => {
-    if (!cartItems) return 0
-
-    return Object.values(cartItems).reduce((acc, item) => {
-      // Vérifie si l'item est défini et contient la propriété quantity avant de procéder
-      if (!item || typeof item.quantity === 'undefined') return acc
-
-      const product = products.find((product) => product._id === item.productId)
-      if (!product) return acc
-
-      return acc + product.price * item.quantity
-    }, 0)
+    return cartItems.reduce((total, item) => total + item.quantity, 0)
   }
+
+  const calculateTotal = () => {
+    return cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)
+  }
+  console.log('cartItems 2', cartItems)
 
   return (
     <ShopContext.Provider
@@ -120,9 +95,9 @@ const ShopContextProvider = ({ children }) => {
         cartItems,
         addToCart,
         removeFromCart,
-        increaseQuantity,
-        decreaseQuantity,
-        getTotalCartAmount,
+        calculateTotal,
+        incrementQuantity,
+        decrementQuantity,
         getTotalCartItems,
       }}
     >
@@ -131,4 +106,7 @@ const ShopContextProvider = ({ children }) => {
   )
 }
 
+ShopContextProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+}
 export default ShopContextProvider

@@ -88,7 +88,9 @@ const Navbar = () => {
         <Link to="/cart">
           <img src={cart_icon} alt="cart" />
         </Link>
-        <div className="nav-cart-count">{getTotalCartItems()}</div>
+        <div className="nav-cart-count">
+          {Number.isNaN(getTotalCartItems()) ? 0 : getTotalCartItems()}
+        </div>
       </div>
     </div>
   )

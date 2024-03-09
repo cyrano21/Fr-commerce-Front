@@ -1,136 +1,158 @@
-import { createContext, useState, useEffect } from 'react'
+import { createContext, useEffect, useState } from 'react'
 import axios from 'axios'
-import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
 
-export const ShopContext = createContext()
+const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL
 
-const ShopContextProvider = ({ children }) => {
+export const ShopContext = createContext(null)
+const ShopContextProvider = (props) => {
   const [products, setProducts] = useState([])
-  const [cartItems, setCartItems] = useState([])
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
 
-  useEffect(() => {
-    const token = localStorage.getItem('auth-token')
-    setIsAuthenticated(!!token)
-    if (token) {
-      fetchProducts()
-      fetchCartItems()
-    }
-  }, [isAuthenticated])
+  const increaseQuantity = (itemId) => {
+    setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }))
+  }
 
-  const createAxiosInstance = () => {
-    const token = localStorage.getItem('auth-token')
-    return axios.create({
-      baseURL: import.meta.env.VITE_REACT_APP_BACKEND_URL,
-      headers: { Authorization: `Bearer ${token}` },
+  const decreaseQuantity = (itemId) => {
+    setCartItems((prev) => {
+      const newQuantity = Math.max(1, prev[itemId] - 1) // La quantité ne peut pas être inférieure à 1
+      return { ...prev, [itemId]: newQuantity }
     })
   }
 
-  const fetchProducts = async () => {
-    const axiosInstance = createAxiosInstance()
-    try {
-      const response = await axiosInstance.get('/allproducts')
+  const getDefaultCart = () => {
+    let cart = {}
+    for (let i = 0; i < 300; i++) {
+      cart[i] = 0
+    }
+    return cart
+  }
 
-      console.log('response.data.products:', response.data.products)
+  const [cartItems, setCartItems] = useState(getDefaultCart())
+
+  useEffect(() => {
+    const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL
+    const fetchProducts = async () => {
+      const response = await axios.get(`${backendUrl}/allproducts`)
       setProducts(response.data.products)
-    } catch (error) {
-      console.error('Erreur lors du chargement des produits:', error)
     }
-  }
 
-  const fetchCartItems = async () => {
-    const axiosInstance = createAxiosInstance()
-    try {
-      const response = await axiosInstance.get('/getcart')
-      console.log('response.data.cartItems:', response.data)
-      setCartItems(response.data)
-    } catch (error) {
-      console.error('Erreur lors du chargement du panier:', error)
-    }
-  }
+    const fetchCartItems = async () => {
+      const authToken = localStorage.getItem('auth-token')
+      if (!authToken) return
 
-  const addToCart = async (productId, quantity = 1) => {
-    const axiosInstance = createAxiosInstance()
-    if (!isAuthenticated) {
-      return <Link to="/login" />
-    }
-    try {
-      const response = await axiosInstance.post('/addtocart', {
-        productId,
-        quantity,
-      })
-      if (response.data.success) {
-        console.log(response.data.message)
-        fetchCartItems() // Rafraîchit les éléments du panier après l'ajout
-      } else {
-        console.error("Erreur lors de l'ajout au panier:", response.data.error)
+      try {
+        const response = await axios.get(`${backendUrl}/getcart`, {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        })
+        setCartItems(response.data.cartData)
+      } catch (error) {
+        console.error('Erreur lors du chargement du panier:', error)
       }
-    } catch (error) {
-      console.error(
-        "Erreur lors de l'ajout au panier:",
-        error.response.data.error,
+    }
+
+    fetchProducts()
+    fetchCartItems()
+  }, [])
+
+  const getTotalCartAmount = () => {
+    return Object.keys(cartItems).reduce((total, itemId) => {
+      const product = products.find(
+        (p) => p.id && p.id.toString() === itemId.toString(),
       )
-    }
-  }
-
-  const removeFromCart = async (productId) => {
-    const axiosInstance = createAxiosInstance()
-    try {
-      await axiosInstance.post('/removefromcart', { productId })
-      fetchCartItems() // Refresh cart items after removing
-    } catch (error) {
-      console.error('Erreur lors de la suppression du panier:', error)
-    }
-  }
-
-  const incrementQuantity = (productId) => {
-    addToCart(productId, 1)
-  }
-
-  const decrementQuantity = (productId) => {
-    const item = cartItems.find((item) => item.productId === productId)
-    if (item && item.quantity > 1) {
-      addToCart(productId, -1)
-    } else {
-      removeFromCart(productId)
-    }
+      if (product && product.new_price) {
+        total += product.new_price * cartItems[itemId]
+      }
+      return total
+    }, 0)
   }
 
   const getTotalCartItems = () => {
-    // S'assure que cartItems est un tableau avant d'appeler reduce.
-    return Array.isArray(cartItems)
-      ? cartItems.reduce((total, item) => total + item.quantity, 0)
-      : 0
+    let totalItem = 0
+    for (const item in cartItems) {
+      if (cartItems[item] > 0) {
+        totalItem += cartItems[item]
+      }
+    }
+    return totalItem
   }
 
-  const calculateTotal = () => {
-    // S'assure que cartItems est un tableau avant d'appeler reduce.
-    return Array.isArray(cartItems)
-      ? cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)
-      : 0
+  const addToCart = (itemId) => {
+    setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }))
+    fetch(`${backendUrl}/addtocart`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        productId: itemId,
+        quantity: 1,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok')
+        }
+        return response.json()
+      })
+      .then((data) => {
+        console.log('Item added to cart:', data)
+      })
+      .catch((error) => {
+        console.error(
+          'There has been a problem with your fetch operation:',
+          error,
+        )
+      })
   }
 
+  const removeFromCart = (itemId) => {
+    setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }))
+    if (localStorage.getItem('auth-token')) {
+      fetch(`${backendUrl}/removefromcart`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'auth-token': localStorage.getItem('auth-token'),
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ itemId: itemId }),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok')
+          }
+          return response.json()
+        })
+        .then((data) => {
+          console.log(data.message)
+        })
+        .catch((error) => {
+          console.error(
+            'There has been a problem with your fetch operation:',
+            error,
+          )
+        })
+    }
+  }
+
+  const contextValue = {
+    products,
+    getTotalCartItems,
+    cartItems,
+    addToCart,
+    removeFromCart,
+    getTotalCartAmount,
+    increaseQuantity,
+    decreaseQuantity,
+  }
   return (
     <ShopContext.Provider
-      value={{
-        products,
-        cartItems,
-        addToCart,
-        removeFromCart,
-        calculateTotal,
-        incrementQuantity,
-        decrementQuantity,
-        getTotalCartItems,
-      }}
+      value={{ ...contextValue, setCartItems, getDefaultCart }}
     >
-      {children}
+      {props.children}
     </ShopContext.Provider>
   )
-}
-
-ShopContextProvider.propTypes = {
-  children: PropTypes.node.isRequired,
 }
 
 export default ShopContextProvider

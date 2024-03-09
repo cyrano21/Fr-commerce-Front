@@ -1,87 +1,97 @@
-import { useContext, useState } from 'react'
+import { useContext } from 'react'
+import axios from 'axios' // Utilisez axiosInstance si vous avez une configuration spécifique
+import { ShopContext } from '../Context/ShopContext.jsx'
 import { useNavigate } from 'react-router-dom'
-import { ShopContext } from '../Context/ShopContext'
-import crossIcon from '../assets/cart_cross_icon.png'
-import Notification from '../Components/Notification'
+
+import cross_icon from '../assets/cart_cross_icon.png' // Assurez-vous que le chemin est correct
+const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL
 
 const CartItems = () => {
   const navigate = useNavigate()
   const {
-    cartItems = { cartData: [] }, // Provide a default value
+    cartItems,
     removeFromCart,
-    incrementQuantity,
-    decrementQuantity,
-    calculateTotal,
+    getTotalCartAmount,
+    increaseQuantity,
+    decreaseQuantity,
+    setCartItems,
+    getDefaultCart,
+    products,
   } = useContext(ShopContext)
 
-  console.log('cartItems', cartItems)
+  const handleCheckout = async () => {
+    const saleItems = products
+      .filter((product) => cartItems[product.id] > 0)
+      .map((product) => ({
+        productId: product._id,
+        quantity: cartItems[product.id],
+        price: product.new_price,
+      }))
 
-  const [notification, setNotification] = useState('')
+    try {
+      axios.post(
+        `${backendUrl}/completePurchase`,
+        { items: saleItems },
+        {
+          headers: {
+            'auth-token': localStorage.getItem('auth-token'),
+          },
+        },
+      )
 
-  // Correction pour l'utilisation de fonctions nommées correctement
-  // et gestion correcte de l'ID du produit lors de la suppression.
-  const handleRemoveClick = (productId) => {
-    removeFromCart(productId)
-    setNotification('Produit retiré du panier')
-    setTimeout(() => setNotification(''), 3000) // Efface la notification après 3 secondes
-  }
-
-  // Ajout d'une vérification pour s'assurer que cartItems n'est pas vide
-  if (!cartItems || cartItems.length === 0) {
-    return <div>Le panier est vide.</div>
+      setCartItems(getDefaultCart()) // Réinitialiser le panier
+      navigate('/payment') // Rediriger vers la page de paiement avec indication de succès
+    } catch (error) {
+      console.error("Erreur lors de la finalisation de l'achat:", error)
+    }
   }
 
   return (
     <div className="cartitems">
       <div className="cartitems-format-main">
-        <h2>Détails du Panier</h2>
+        <p>Produits</p>
+        <p>Titre</p>
+        <p>Prix</p>
+        <p>Quantité</p>
+        <p>Total</p>
+        <p>Retirer</p>
       </div>
       <hr />
       <div className="cartitems-list">
-        {cartItems.cartData &&
-          cartItems.cartData.map((item) => (
-            <div key={item.productId} className="cartitems-format">
+        {products
+          .filter((product) => cartItems[product.id] > 0)
+          .map((product) => (
+            <div key={product.id} className="cartitems-format">
               <img
                 className="cartitems-product-icon"
-                src={item.image || 'default_image.jpg'} // Utilisation de l'image par défaut si `item.image` est undefined
-                alt={item.name || 'Nom du produit'}
+                src={product.image}
+                alt=""
               />
-              <p className="cartitems-product-title">
-                {item.name || 'Nom inconnu'}
-              </p>
-              <p>${item.price || 0}</p>
+              <p className="cartitems-product-title">{product.name}</p>
+              <p>${product.new_price}</p>
               <div className="cartitems-quantity">
-                <button
-                  onClick={() => decrementQuantity(item.productId)}
-                  aria-label="Diminuer la quantité"
-                >
-                  -
-                </button>
-                <span>{item.quantity}</span>
-                <button
-                  onClick={() => incrementQuantity(item.productId)}
-                  aria-label="Augmenter la quantité"
-                >
-                  +
-                </button>
+                <button onClick={() => decreaseQuantity(product.id)}>-</button>
+                <span>{cartItems[product.id]}</span>
+                <button onClick={() => increaseQuantity(product.id)}>+</button>
               </div>
-              <span>${(item.price || 0) * item.quantity}</span>
+              <p>${product.new_price * cartItems[product.id]}</p>
               <img
-                onClick={() => handleRemoveClick(item.productId)}
+                onClick={() => removeFromCart(product.id)}
                 className="cartitems-remove-icon"
-                src={crossIcon}
+                src={cross_icon}
                 alt="remove"
               />
             </div>
           ))}
       </div>
+
       <div className="cartitems-down">
         <div className="cartitems-total">
           <h1>Total du panier</h1>
           <div>
             <div className="cartitems-total-item">
               <p>Sous-total</p>
-              <p>${calculateTotal()}</p>
+              <p>${getTotalCartAmount()}</p>
             </div>
             <hr />
             <div className="cartitems-total-item">
@@ -91,12 +101,10 @@ const CartItems = () => {
             <hr />
             <div className="cartitems-total-item">
               <h3>Total</h3>
-              <h3>${calculateTotal()}</h3>
+              <h3>${getTotalCartAmount()}</h3>
             </div>
           </div>
-          <button onClick={() => navigate('/payment')}>
-            PASSER À LA CAISSE
-          </button>
+          <button onClick={handleCheckout}>PASSER À LA CAISSE</button>
         </div>
         <div className="cartitems-promocode">
           <p>Si vous avez un code promo, saisissez-le ici</p>
@@ -106,12 +114,6 @@ const CartItems = () => {
           </div>
         </div>
       </div>
-      {notification && (
-        <Notification
-          message={notification}
-          onClose={() => setNotification('')}
-        />
-      )}
     </div>
   )
 }

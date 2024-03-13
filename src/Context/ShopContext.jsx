@@ -47,6 +47,7 @@ const ShopContextProvider = ({ children }) => {
   }
 
   const getTotalCartItems = () => {
+    console.log('cartItems dans getTotal:', cartItems)
     if (
       typeof cartItems !== 'object' ||
       !Object.values(cartItems).every(Number.isFinite)
@@ -56,6 +57,10 @@ const ShopContextProvider = ({ children }) => {
       )
       return 0
     }
+    console.log(
+      'object:',
+      Object.values(cartItems).reduce((total, quantity) => total + quantity, 0),
+    )
     return Object.values(cartItems).reduce(
       (total, quantity) => total + quantity,
       0,
@@ -84,27 +89,25 @@ const ShopContextProvider = ({ children }) => {
 
   const addToCart = (product) => {
     console.log('productId:', product.itemId)
-    setCartItems((prev) => ({
-      ...prev,
-      [product.itemId]: (prev[product.itemId] || 0) + 1,
-    }))
-    const newCartItems = { ...cartItems }
-    const quantity = 1
-    if (typeof product.itemId === 'string' && typeof quantity === 'number') {
-      if (newCartItems[product.itemId]) {
-        newCartItems[product.itemId] += quantity
+    setCartItems((prev) => {
+      const newCartItems = { ...prev }
+      const quantity = 1
+      if (typeof product.itemId === 'string' && typeof quantity === 'number') {
+        if (newCartItems[product.itemId]) {
+          newCartItems[product.itemId] += quantity
+        } else {
+          newCartItems[product.itemId] = quantity
+        }
+        console.log('newCartItems:', newCartItems)
+        return newCartItems
       } else {
-        newCartItems[product.itemId] = quantity
+        console.error(
+          'productId doit être une chaîne et quantity doit être un nombre.',
+        )
+        return prev
       }
-      console.log('newCartItems:', newCartItems)
-      setCartItems(newCartItems)
-    } else {
-      console.error(
-        'productId doit être une chaîne et quantity doit être un nombre.',
-      )
-    }
+    })
 
-    console.log("cartItems après l'ajout d'un produit:", cartItems)
     fetch(`${backendUrl}/addtocart`, {
       method: 'POST',
       headers: {

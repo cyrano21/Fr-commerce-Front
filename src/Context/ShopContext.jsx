@@ -48,20 +48,15 @@ const ShopContextProvider = ({ children }) => {
 
   const getTotalCartItems = () => {
     console.log('cartItems dans getTotal:', cartItems)
-    if (
-      typeof cartItems !== 'object' ||
-      !Object.values(cartItems).every(Number.isFinite)
-    ) {
-      console.error(
-        'cartItems doit être un objet dont toutes les valeurs sont des nombres.',
-      )
-      return 0
-    }
-    console.log(
-      'object:',
-      Object.values(cartItems).reduce((total, quantity) => total + quantity, 0),
-    )
-    return Object.values(cartItems).reduce(
+    const cleanedCartItems = Object.keys(cartItems).reduce((acc, key) => {
+      const quantity = parseInt(cartItems[key], 10)
+      if (!isNaN(quantity)) {
+        acc[key] = quantity
+      }
+      return acc
+    }, {})
+    console.log('cleanedCartItems:', cleanedCartItems)
+    return Object.values(cleanedCartItems).reduce(
       (total, quantity) => total + quantity,
       0,
     )

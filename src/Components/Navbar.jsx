@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { ShopContext } from '../Context/ShopContext.jsx'
 import { Link } from 'react-router-dom'
 import logo from '../assets/logo.png'
@@ -7,10 +7,14 @@ import nav_dropdown from '../assets/nav_dropdown.png'
 
 const Navbar = () => {
   let [menu, setMenu] = useState('shop')
-  const { getTotalCartItems } = useContext(ShopContext)
-  // Assurez-vous que getTotalCartItems retourne bien le total des articles dans le panier.
-  const totalItems = getTotalCartItems()
+  const { cartItems, getTotalCartItems } = useContext(ShopContext)
+  const [totalItems, setTotalItems] = useState(getTotalCartItems())
+
   console.log('Valeur retournée par getTotalCartItems:', totalItems)
+
+  useEffect(() => {
+    setTotalItems(getTotalCartItems())
+  }, [cartItems, getTotalCartItems])
 
   const menuRef = useRef()
   console.log('totalItems:', totalItems)

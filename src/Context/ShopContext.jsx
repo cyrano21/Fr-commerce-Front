@@ -84,15 +84,25 @@ const ShopContextProvider = ({ children }) => {
 
   const addToCart = (product) => {
     console.log('productId:', product.itemId)
+    setCartItems((prev) => ({
+      ...prev,
+      [product.itemId]: (prev[product.itemId] || 0) + 1,
+    }))
     const newCartItems = { ...cartItems }
     const quantity = 1
-    if (newCartItems[product.itemId]) {
-      newCartItems[product.itemId] += quantity
+    if (typeof product.itemId === 'string' && typeof quantity === 'number') {
+      if (newCartItems[product.itemId]) {
+        newCartItems[product.itemId] += quantity
+      } else {
+        newCartItems[product.itemId] = quantity
+      }
+      console.log('newCartItems:', newCartItems)
+      setCartItems(newCartItems)
     } else {
-      newCartItems[product.itemId] = quantity
+      console.error(
+        'productId doit être une chaîne et quantity doit être un nombre.',
+      )
     }
-    console.log('newCartItems:', newCartItems)
-    setCartItems(newCartItems)
 
     console.log("cartItems après l'ajout d'un produit:", cartItems)
     fetch(`${backendUrl}/addtocart`, {

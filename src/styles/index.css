@@ -1384,6 +1384,8 @@ code {
   gap: 10px;
   border: solid 1px #D5D9D9;
   border-radius: 5px;
+  padding: 0;
+  width: 90px;
 }
 .cartitems .cartitems-list .cartitems-format .cartitems-quantity button {
   border: 2px solid #ebebeb;
@@ -1523,7 +1525,7 @@ code {
   }
   .cartitems .cartitems-list .cartitems-format {
     display: flex;
-    flex-direction: row;
+    flex-direction: row-reverse;
   }
   .cartitems .cartitems-list .cartitems-format img {
     order: 1;
@@ -1531,12 +1533,16 @@ code {
   .cartitems .cartitems-list .cartitems-format .cartitems-remove-icon {
     display: none;
   }
-  .cartitems .cartitems-list .cartitems-format .cartitems-product-title,
-  .cartitems .cartitems-list .cartitems-format .cartitems-quantity,
-  .cartitems .cartitems-list .cartitems-format p {
+  .cartitems .cartitems-list .cartitems-format .cartitems-product-title p,
+  .cartitems .cartitems-list .cartitems-format .cartitems-quantity p {
     order: 2;
     display: flex;
     flex-direction: column;
+  }
+  .cartitems .cartitems-list .cartitems-format .cartitems-quantity {
+    display: flex;
+    flex-direction: column;
+    width: 25px;
   }
   .cartitems .cartitems-list .cartitems-format .cartitems-quantity button {
     height: 25px;

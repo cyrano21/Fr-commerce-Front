@@ -19,14 +19,18 @@ const CartItems = () => {
     products,
   } = useContext(ShopContext)
 
+  console.log('products:', products)
+  console.log('cartItems:', cartItems)
+
   const handleCheckout = async () => {
     const saleItems = products
-      .filter((product) => cartItems[product.id] > 0)
+      .filter((product) => cartItems[product._id] > 0)
       .map((product) => ({
         productId: product._id,
-        quantity: cartItems[product.id],
+        quantity: cartItems[product._id],
         price: product.new_price,
       }))
+    console.log('saleItems:', saleItems)
 
     try {
       axios.post(
@@ -59,9 +63,9 @@ const CartItems = () => {
       <hr />
       <div className="cartitems-list">
         {products
-          .filter((product) => cartItems[product.id] > 0)
+          .filter((product) => cartItems[product._id] > 0)
           .map((product) => (
-            <div key={product.id} className="cartitems-format">
+            <div key={product._id} className="cartitems-format">
               <img
                 className="cartitems-product-icon"
                 src={product.image}
@@ -70,13 +74,13 @@ const CartItems = () => {
               <p className="cartitems-product-title">{product.name}</p>
               <p>${product.new_price}</p>
               <div className="cartitems-quantity">
-                <button onClick={() => decreaseQuantity(product.id)}>-</button>
-                <span>{cartItems[product.id]}</span>
-                <button onClick={() => increaseQuantity(product.id)}>+</button>
+                <button onClick={() => decreaseQuantity(product._id)}>-</button>
+                <span>{cartItems[product._id]}</span>
+                <button onClick={() => increaseQuantity(product._id)}>+</button>
               </div>
-              <p>${product.new_price * cartItems[product.id]}</p>
+              <p>${product.new_price * cartItems[product._id]}</p>
               <img
-                onClick={() => removeFromCart(product.id)}
+                onClick={() => removeFromCart(product._id)}
                 className="cartitems-remove-icon"
                 src={cross_icon}
                 alt="remove"

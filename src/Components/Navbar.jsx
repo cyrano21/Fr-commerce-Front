@@ -8,9 +8,12 @@ import nav_dropdown from '../assets/nav_dropdown.png'
 const Navbar = () => {
   let [menu, setMenu] = useState('shop')
   const { getTotalCartItems } = useContext(ShopContext)
+  // Assurez-vous que getTotalCartItems retourne bien le total des articles dans le panier.
+  const totalItems = getTotalCartItems()
+  console.log('Valeur retournée par getTotalCartItems:', totalItems)
 
   const menuRef = useRef()
-
+  console.log('totalItems:', totalItems)
   const dropdown_toggle = (e) => {
     menuRef.current.classList.toggle('nav-menu-visible')
     e.target.classList.toggle('open')
@@ -89,7 +92,7 @@ const Navbar = () => {
           <img src={cart_icon} alt="cart" />
         </Link>
         <div className="nav-cart-count">
-          {Number.isNaN(getTotalCartItems()) ? 0 : getTotalCartItems()}
+          {Number.isNaN(totalItems) ? 0 : totalItems}
         </div>
       </div>
     </div>

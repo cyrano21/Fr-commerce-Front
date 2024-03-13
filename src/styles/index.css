@@ -1383,6 +1383,7 @@ code {
   display: flex;
   gap: 10px;
   border: solid 1px #D5D9D9;
+  border-radius: 5px;
 }
 .cartitems .cartitems-list .cartitems-format .cartitems-quantity button {
   border: 2px solid #ebebeb;

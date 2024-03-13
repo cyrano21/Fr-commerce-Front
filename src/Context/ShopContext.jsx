@@ -35,12 +35,13 @@ const ShopContextProvider = ({ children }) => {
 
   const decreaseQuantity = (itemId) => {
     setCartItems((prev) => {
-      const newQuantity = Math.max(0, (prev[itemId] || 0) - 1)
-      if (newQuantity > 0) {
-        return { ...prev, [itemId]: newQuantity }
-      } else {
+      if (prev[itemId] <= 1) {
+        removeFromCart(itemId)
         const { [itemId]: removedItem, ...rest } = prev
         return rest
+      } else {
+        const newQuantity = Math.max(0, (prev[itemId] || 0) - 1)
+        return { ...prev, [itemId]: newQuantity }
       }
     })
   }

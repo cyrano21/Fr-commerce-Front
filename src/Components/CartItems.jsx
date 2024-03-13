@@ -74,7 +74,9 @@ const CartItems = () => {
               <p className="cartitems-product-title">{product.name}</p>
               <p>${product.new_price}</p>
               <div className="cartitems-quantity">
-                <button onClick={() => decreaseQuantity(product._id)}>-</button>
+                <button onClick={() => decreaseQuantity(product._id)}>
+                  {cartItems[product._id] > 1 ? '-' : 'x'}
+                </button>
                 <span>{cartItems[product._id]}</span>
                 <button onClick={() => increaseQuantity(product._id)}>+</button>
               </div>

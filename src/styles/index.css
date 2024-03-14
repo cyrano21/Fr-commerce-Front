@@ -1359,6 +1359,7 @@ code {
   gap: 15px;
   padding: 20px 0;
   color: #454545;
+  font-weight: bold;
 }
 .cartitems .cartitems-list {
   border-top: 3px solid #e2e2e2;
@@ -1387,6 +1388,9 @@ code {
   border-radius: 5px;
   padding: 0;
   width: 90px;
+}
+.cartitems .cartitems-list .cartitems-format .cartitems-quantity span {
+  color: #007185;
 }
 .cartitems .cartitems-list .cartitems-format .cartitems-quantity button {
   border: 2px solid #ebebeb;

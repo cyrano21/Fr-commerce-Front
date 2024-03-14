@@ -14,6 +14,7 @@
     gap: 15px;
     padding: 20px 0;
     color: #454545;
+    font-weight: bold;
   }
 
   .cartitems-list {
@@ -43,6 +44,9 @@
         border-radius: 5px;
         padding: 0;
         width: 90px;
+        span {
+          color: #007185;
+        }
 
 
         button {

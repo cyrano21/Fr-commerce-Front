@@ -95,11 +95,14 @@ const ShopContextProvider = ({ children }) => {
     // Calculez le total en utilisant les prix des produits et les quantités du panier
     return Object.keys(cartItems).reduce((total, itemId) => {
       const product = products.find((p) => p._id.toString() === itemId)
-      if (product && product.price) {
+      console.log('product getTotalCartAmount:', product)
+      if (product && product.new_price) {
+        console.log('product.price:', product.new_price)
         const quantity = parseInt(cartItems[itemId], 10)
         if (!isNaN(quantity)) {
-          total += product.price * quantity
+          total += product.new_price * quantity
         }
+        console.log('total getTotalCartAmount:', total)
       }
       return total
     }, 0)

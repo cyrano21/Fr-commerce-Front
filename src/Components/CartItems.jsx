@@ -12,15 +12,13 @@ const CartItems = () => {
     cartItems,
     removeFromCart,
     getTotalCartAmount,
+    isProductsLoading,
     increaseQuantity,
     decreaseQuantity,
     setCartItems,
     getDefaultCart,
     products,
   } = useContext(ShopContext)
-
-  console.log('products:', products)
-  console.log('cartItems:', cartItems)
 
   const handleCheckout = async () => {
     const saleItems = products
@@ -48,6 +46,10 @@ const CartItems = () => {
     } catch (error) {
       console.error("Erreur lors de la finalisation de l'achat:", error)
     }
+  }
+
+  if (isProductsLoading) {
+    return <div>Chargement...</div>
   }
 
   return (

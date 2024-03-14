@@ -10,6 +10,21 @@ const ShopContextProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState(
     JSON.parse(localStorage.getItem('cartItems')) || {},
   )
+  const [isProductsLoading, setIsProductsLoading] = useState(true)
+
+  useEffect(() => {
+    setIsProductsLoading(true) // Commencer le chargement
+    axios
+      .get(`${backendUrl}/allproducts`)
+      .then((response) => {
+        setProducts(response.data.products)
+        setIsProductsLoading(false) // Arrêter le chargement une fois les données reçues
+      })
+      .catch((error) => {
+        console.error('Erreur lors du chargement des produits:', error)
+        setIsProductsLoading(false) // Arrêter le chargement même en cas d'erreur
+      })
+  }, [])
 
   useEffect(() => {
     axios
@@ -47,7 +62,6 @@ const ShopContextProvider = ({ children }) => {
   }
 
   const getTotalCartItems = () => {
-    console.log('cartItems dans getTotal:', cartItems)
     const cleanedCartItems = Object.keys(cartItems).reduce((acc, key) => {
       const quantity = parseInt(cartItems[key], 10)
       if (!isNaN(quantity)) {
@@ -55,7 +69,6 @@ const ShopContextProvider = ({ children }) => {
       }
       return acc
     }, {})
-    console.log('cleanedCartItems:', cleanedCartItems)
     return Object.values(cleanedCartItems).reduce(
       (total, quantity) => total + quantity,
       0,
@@ -71,12 +84,22 @@ const ShopContextProvider = ({ children }) => {
   }
 
   const getTotalCartAmount = () => {
-    return Object.keys(cartItems).reduce((total, itemId) => {
-      const product = products.find(
-        (p) => p._id && p._id.toString() === itemId.toString(),
+    // Vérifiez que les produits sont chargés
+    if (isProductsLoading || !products.length) {
+      console.log(
+        'En attente du chargement des produits ou aucun produit chargé.',
       )
+      return 0
+    }
+
+    // Calculez le total en utilisant les prix des produits et les quantités du panier
+    return Object.keys(cartItems).reduce((total, itemId) => {
+      const product = products.find((p) => p._id.toString() === itemId)
       if (product && product.price) {
-        total += product.price * cartItems[itemId]
+        const quantity = parseInt(cartItems[itemId], 10)
+        if (!isNaN(quantity)) {
+          total += product.price * quantity
+        }
       }
       return total
     }, 0)
@@ -150,7 +173,12 @@ const ShopContextProvider = ({ children }) => {
   }
   return (
     <ShopContext.Provider
-      value={{ ...contextValue, setCartItems, getDefaultCart }}
+      value={{
+        ...contextValue,
+        setCartItems,
+        isProductsLoading,
+        getDefaultCart,
+      }}
     >
       {children}
     </ShopContext.Provider>

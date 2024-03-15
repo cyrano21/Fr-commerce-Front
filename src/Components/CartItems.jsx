@@ -28,6 +28,15 @@ const CartItems = () => {
   )
 
   const handleCheckout = async () => {
+    // Préparez les articles pour la vente en filtrant les produits présents dans le panier et en les mappant à la structure attendue par votre backend
+    const saleItems = products
+      .filter((product) => cartItems[product._id] > 0)
+      .map((product) => ({
+        productId: product._id,
+        quantity: cartItems[product._id],
+        price: product.new_price, // Assurez-vous que c'est le champ correct attendu par votre backend
+      }))
+
     try {
       const response = await axios.post(
         `${backendUrl}/completePurchase`,

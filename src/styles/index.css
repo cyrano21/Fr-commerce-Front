@@ -1355,6 +1355,8 @@ code {
   text-align: center;
   padding: 20px;
   font-size: 20px;
+  max-width: 80%;
+  margin: 40px 0;
 }
 .cartitems hr {
   height: 3px;

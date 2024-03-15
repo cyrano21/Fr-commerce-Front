@@ -35,26 +35,23 @@ const CartItems = () => {
         quantity: cartItems[product._id],
         price: product.new_price,
       }))
+    console.log('saleItems:', saleItems)
 
     try {
-      // Appel API sans l'en-tête 'auth-token'
-      const response = await axios.post(`${backendUrl}/completePurchase`, {
-        items: saleItems,
-      })
+      axios.post(
+        `${backendUrl}/completePurchase`,
+        { items: saleItems },
+        {
+          headers: {
+            'auth-token': localStorage.getItem('auth-token'),
+          },
+        },
+      )
 
-      if (response.status === 200) {
-        setCartItems(getDefaultCart()) // Réinitialiser le panier
-        navigate('/payment') // Rediriger vers la page de paiement
-      } else {
-        console.error(
-          "Erreur lors de la finalisation de l'achat:",
-          response.status,
-        )
-        alert('Une erreur est survenue lors du processus de paiement.')
-      }
+      setCartItems(getDefaultCart()) // Réinitialiser le panier
+      navigate('/payment') // Rediriger vers la page de paiement avec indication de succès
     } catch (error) {
       console.error("Erreur lors de la finalisation de l'achat:", error)
-      alert('Une erreur est survenue lors du processus de paiement.')
     }
   }
 

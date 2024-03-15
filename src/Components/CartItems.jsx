@@ -28,30 +28,24 @@ const CartItems = () => {
   )
 
   const handleCheckout = async () => {
-    // Préparez les articles pour la vente en filtrant les produits présents dans le panier et en les mappant à la structure attendue par votre backend
     const saleItems = products
       .filter((product) => cartItems[product._id] > 0)
       .map((product) => ({
         productId: product._id,
         quantity: cartItems[product._id],
-        price: product.new_price, // Assurez-vous que c'est le champ correct attendu par votre backend
+        price: product.new_price,
       }))
 
     try {
-      const response = await axios.post(
-        `${backendUrl}/completePurchase`,
-        { items: saleItems },
-        {
-          headers: { 'auth-token': localStorage.getItem('auth-token') },
-        },
-      )
+      // Appel API sans l'en-tête 'auth-token'
+      const response = await axios.post(`${backendUrl}/completePurchase`, {
+        items: saleItems,
+      })
 
       if (response.status === 200) {
-        // Traitement en cas de succès
-        setCartItems(getDefaultCart())
-        navigate('/payment')
+        setCartItems(getDefaultCart()) // Réinitialiser le panier
+        navigate('/payment') // Rediriger vers la page de paiement
       } else {
-        // Gérer les réponses non réussies
         console.error(
           "Erreur lors de la finalisation de l'achat:",
           response.status,
@@ -99,7 +93,7 @@ const CartItems = () => {
                   <p>${product.new_price}</p>
                   <div className="cartitems-quantity">
                     <button onClick={() => decreaseQuantity(product._id)}>
-                      -
+                      {cartItems[product._id] > 1 ? '-' : 'x'}
                     </button>
                     <span>{cartItems[product._id]}</span>
                     <button onClick={() => increaseQuantity(product._id)}>

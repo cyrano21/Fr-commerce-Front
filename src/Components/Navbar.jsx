@@ -13,8 +13,9 @@ const Navbar = () => {
   console.log('Valeur retournée par getTotalCartItems:', totalItems)
 
   useEffect(() => {
-    setTotalItems(getTotalCartItems())
-  }, [cartItems, getTotalCartItems])
+    const total = getTotalCartItems() // Appeler la fonction plutôt que d'utiliser la référence
+    setTotalItems(total)
+  }, [cartItems]) // Assurez-vous que cartItems est bien mis à jour pour déclencher cet effet
 
   const menuRef = useRef()
   console.log('totalItems:', totalItems)

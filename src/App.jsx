@@ -2,7 +2,6 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Navbar from './Components/Navbar.jsx'
 import Shop from './Pages/Shop.jsx'
 import ShopCategory from './Pages/ShopCategory.jsx'
-import Product from './Pages/Product.jsx'
 import Cart from './Pages/Cart.jsx'
 import LoginSignup from './Pages/LoginSignup.jsx'
 import Footer from './Components/Footer.jsx'
@@ -12,6 +11,8 @@ import kids_banner from './assets/banner_kids.png'
 import PaymentPage from './Components/PaymentPage.jsx'
 import ProductDisplay from './Components/ProductDisplay.jsx'
 import ShopContextProvider from './Context/ShopContext.jsx'
+
+localStorage.setItem('cartItems', JSON.stringify({})) // Pour réinitialiser lors du développement
 
 function App() {
   return (

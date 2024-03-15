@@ -1,5 +1,16 @@
 .cartitems {
   margin: 100px 170px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centre verticalement */
+  align-items: center; /* Centre horizontalement */
+
+  .cartitems-empty {
+    text-align: center;
+    padding: 20px;
+    font-size: 20px;
+  }
+
 
   hr {
     height: 3px;

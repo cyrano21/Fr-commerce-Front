@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useMemo } from 'react'
 import axios from 'axios' // Utilisez axiosInstance si vous avez une configuration spécifique
 import { ShopContext } from '../Context/ShopContext.jsx'
 import { useNavigate } from 'react-router-dom'
@@ -12,6 +12,7 @@ const CartItems = () => {
     cartItems,
     removeFromCart,
     getTotalCartAmount,
+    getTotalCartItems,
     isProductsLoading,
     increaseQuantity,
     decreaseQuantity,
@@ -20,31 +21,37 @@ const CartItems = () => {
     products,
   } = useContext(ShopContext)
 
-  const handleCheckout = async () => {
-    const saleItems = products
-      .filter((product) => cartItems[product._id] > 0)
-      .map((product) => ({
-        productId: product._id,
-        quantity: cartItems[product._id],
-        price: product.new_price,
-      }))
-    console.log('saleItems:', saleItems)
+  const totalCartItems = getTotalCartItems()
+  const totalCartAmount = useMemo(
+    () => getTotalCartAmount(),
+    [cartItems, products],
+  )
 
+  const handleCheckout = async () => {
     try {
-      axios.post(
+      const response = await axios.post(
         `${backendUrl}/completePurchase`,
         { items: saleItems },
         {
-          headers: {
-            'auth-token': localStorage.getItem('auth-token'),
-          },
+          headers: { 'auth-token': localStorage.getItem('auth-token') },
         },
       )
 
-      setCartItems(getDefaultCart()) // Réinitialiser le panier
-      navigate('/payment') // Rediriger vers la page de paiement avec indication de succès
+      if (response.status === 200) {
+        // Traitement en cas de succès
+        setCartItems(getDefaultCart())
+        navigate('/payment')
+      } else {
+        // Gérer les réponses non réussies
+        console.error(
+          "Erreur lors de la finalisation de l'achat:",
+          response.status,
+        )
+        alert('Une erreur est survenue lors du processus de paiement.')
+      }
     } catch (error) {
       console.error("Erreur lors de la finalisation de l'achat:", error)
+      alert('Une erreur est survenue lors du processus de paiement.')
     }
   }
 
@@ -54,73 +61,87 @@ const CartItems = () => {
 
   return (
     <div className="cartitems">
-      <div className="cartitems-format-main">
-        <p>Produits</p>
-        <p>Titre</p>
-        <p>Prix</p>
-        <p>Quantité</p>
-        <p>Total</p>
-        <p>Retirer</p>
-      </div>
-      <hr />
-      <div className="cartitems-list">
-        {products
-          .filter((product) => cartItems[product._id] > 0)
-          .map((product) => (
-            <div key={product._id} className="cartitems-format">
-              <img
-                className="cartitems-product-icon"
-                src={product.image}
-                alt=""
-              />
-              <p className="cartitems-product-title">{product.name}</p>
-              <p>${product.new_price}</p>
-              <div className="cartitems-quantity">
-                <button onClick={() => decreaseQuantity(product._id)}>
-                  {cartItems[product._id] > 1 ? '-' : 'x'}
-                </button>
-                <span>{cartItems[product._id]}</span>
-                <button onClick={() => increaseQuantity(product._id)}>+</button>
-              </div>
-              <p>${product.new_price * cartItems[product._id]}</p>
-              <img
-                onClick={() => removeFromCart(product._id)}
-                className="cartitems-remove-icon"
-                src={cross_icon}
-                alt="remove"
-              />
-            </div>
-          ))}
-      </div>
+      {totalCartItems === 0 ? (
+        <div className="cartitems-empty">
+          <h2>Votre panier est vide.</h2>
+        </div>
+      ) : (
+        <>
+          <div className="cartitems-format-main">
+            <p>Produits</p>
+            <p>Titre</p>
+            <p>Prix</p>
+            <p>Quantité</p>
+            <p>Total</p>
+            <p>Retirer</p>
+          </div>
+          <hr />
+          <div className="cartitems-list">
+            {products
+              .filter((product) => cartItems[product._id])
+              .map((product) => (
+                <div key={product._id} className="cartitems-format">
+                  <img
+                    className="cartitems-product-icon"
+                    src={product.image}
+                    alt={product.name}
+                  />
+                  <p className="cartitems-product-title">{product.name}</p>
+                  <p>${product.new_price}</p>
+                  <div className="cartitems-quantity">
+                    <button onClick={() => decreaseQuantity(product._id)}>
+                      -
+                    </button>
+                    <span>{cartItems[product._id]}</span>
+                    <button onClick={() => increaseQuantity(product._id)}>
+                      +
+                    </button>
+                  </div>
+                  <p>${product.new_price * cartItems[product._id]}</p>
+                  <img
+                    onClick={() => removeFromCart(product._id)}
+                    className="cartitems-remove-icon"
+                    src={cross_icon}
+                    alt="remove"
+                  />
+                </div>
+              ))}
+          </div>
+        </>
+      )}
 
       <div className="cartitems-down">
-        <div className="cartitems-total">
-          <h1>Total du panier</h1>
-          <div>
-            <div className="cartitems-total-item">
-              <p>Sous-total</p>
-              <p>${getTotalCartAmount()}</p>
+        {totalCartItems > 0 && (
+          <>
+            <div className="cartitems-total">
+              <h1>Total du panier</h1>
+              <div>
+                <div className="cartitems-total-item">
+                  <p>Sous-total</p>
+                  <p>${totalCartAmount}</p>
+                </div>
+                <hr />
+                <div className="cartitems-total-item">
+                  <p>Frais de livraison</p>
+                  <p>Gratuit</p>
+                </div>
+                <hr />
+                <div className="cartitems-total-item">
+                  <h3>Total</h3>
+                  <h3>${totalCartAmount}</h3>
+                </div>
+              </div>
+              <button onClick={handleCheckout}>PASSER À LA CAISSE</button>
             </div>
-            <hr />
-            <div className="cartitems-total-item">
-              <p>Frais de livraison</p>
-              <p>Gratuit</p>
+            <div className="cartitems-promocode">
+              <p>Si vous avez un code promo, saisissez-le ici</p>
+              <div className="cartitems-promobox">
+                <input type="text" placeholder="promo code" />
+                <button>Valider</button>
+              </div>
             </div>
-            <hr />
-            <div className="cartitems-total-item">
-              <h3>Total</h3>
-              <h3>${getTotalCartAmount()}</h3>
-            </div>
-          </div>
-          <button onClick={handleCheckout}>PASSER À LA CAISSE</button>
-        </div>
-        <div className="cartitems-promocode">
-          <p>Si vous avez un code promo, saisissez-le ici</p>
-          <div className="cartitems-promobox">
-            <input type="text" placeholder="promo code" />
-            <button>Valider</button>
-          </div>
-        </div>
+          </>
+        )}
       </div>
     </div>
   )

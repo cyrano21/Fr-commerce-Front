@@ -75,6 +75,10 @@ const ShopContextProvider = ({ children }) => {
     )
   }
 
+  if (getTotalCartItems() === 0) {
+    return <div>Votre panier est vide.</div>
+  }
+
   const getDefaultCart = () => {
     let cart = {}
     for (let i = 0; i < 300; i++) {
@@ -111,22 +115,13 @@ const ShopContextProvider = ({ children }) => {
   const addToCart = (product) => {
     console.log('productId:', product.itemId)
     setCartItems((prev) => {
-      const newCartItems = { ...prev }
-      const quantity = 1
-      if (typeof product.itemId === 'string' && typeof quantity === 'number') {
-        if (newCartItems[product.itemId]) {
-          newCartItems[product.itemId] += quantity
-        } else {
-          newCartItems[product.itemId] = quantity
-        }
-        console.log('newCartItems:', newCartItems)
-        return newCartItems
-      } else {
-        console.error(
-          'productId doit être une chaîne et quantity doit être un nombre.',
-        )
-        return prev
+      // Directement mettre à jour la quantité pour l'ID de produit spécifié
+      const newCartItems = {
+        ...prev,
+        [product.itemId]: (prev[product.itemId] || 0) + 1,
       }
+      console.log('newCartItems:', newCartItems)
+      return newCartItems
     })
 
     fetch(`${backendUrl}/addtocart`, {

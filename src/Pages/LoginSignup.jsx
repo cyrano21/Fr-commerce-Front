@@ -85,8 +85,8 @@ const LoginSignup = () => {
               onChange={termsChangeHandler}
             />
             <label htmlFor="terms">
-              En continuant, j'accepte les conditions d'utilisation et la
-              politique de confidentialité.
+              En continuant, j&apos; accepte les conditions d&apos; utilisation
+              et la politique de confidentialité.
             </label>
           </div>
         )}

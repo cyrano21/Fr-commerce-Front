@@ -68,7 +68,6 @@
     height: 60vh;
     width: 80%;
     margin: 0 auto;
-    overflow: hidden;
 
     h1 {
       font-size: 30px;
@@ -82,7 +81,6 @@
 
 @media (max-width: 800px) {
   .popular {
-    height: 50vh;
     gap: 6px;
 
     h1 {
@@ -95,29 +93,49 @@
 }
 
 @media (max-width: 500px) {
+.popular {
+    height: 50vh;
+    gap: 5px;
+
+    h1 {
+      font-size: 10px;
+    }
+    hr {
+      width: 80px;
+    }
+  }
   .item-container, .popular-item {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 20px;
+
   }
   .popular-item{
     margin-top: 0;
-  }
-  .slick-prev, .slick-next {
-    background-color: #000;
-    color: #fff;
-    border: 2px solid #fff;
+    .item{
+      margin: 0 auto;
+      width: 70%;
 
-    &:before {
-      color: #fff;
     }
   }
 
+  slick-slider slick-initialized {
+    width: 100%;
+    .slick-prev, .slick-next {
+      background-color: #FF4142;
+      color: #FF4142;
+      border: 2px solid #fff;
+
+      &:before {
+        color: #FF4142;
+      }
+    }
+  }
+
+
   .slick-prev {
-    left: 10px;
+
   }
 
   .slick-next {
-    right: 10px;
   }
 }

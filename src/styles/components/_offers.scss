@@ -49,8 +49,6 @@
   }
 
   @media (max-width: 1280px) {
-    padding: 0 60px;
-    margin-bottom: 80px;
     height: 40vh;
 
     .offers-left {
@@ -79,7 +77,6 @@
   }
 
   @media (max-width: 800px) {
-    margin-bottom: 60px;
 
     .offers-left {
       h1 {
@@ -105,10 +102,9 @@
   }
 
   @media (max-width: 500px) {
-    height: 25vh;
-    margin-bottom: 50px;
-
+    margin: 30px 0;
     .offers-left {
+
       h1 {
         font-size: 16px;
       }
@@ -131,4 +127,16 @@
       }
     }
   }
+
+
+  @media (max-width: 480px) {
+    width: 20%;
+    margin-top: 100px ;
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 0;
+    display: flex;
+    justify-content: center;
+    }
+
 }

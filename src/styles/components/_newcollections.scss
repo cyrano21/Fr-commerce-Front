@@ -60,6 +60,9 @@
 
   @media (max-width: 500px) {
     .collections {
+
+      width: 70%;
+      margin: 0 auto;
       grid-template-columns: repeat(2, 1fr);
 
     }

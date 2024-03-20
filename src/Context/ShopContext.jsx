@@ -11,12 +11,12 @@ const ShopContextProvider = ({ children }) => {
     JSON.parse(localStorage.getItem('cartItems')) || {},
   )
   const [isProductsLoading, setIsProductsLoading] = useState(true)
-
   useEffect(() => {
     setIsProductsLoading(true) // Commencer le chargement
     axios
       .get(`${backendUrl}/allproducts`)
       .then((response) => {
+        console.log('Produits récupérés:', response.data.products)
         setProducts(response.data.products)
         setIsProductsLoading(false) // Arrêter le chargement une fois les données reçues
       })
@@ -52,7 +52,7 @@ const ShopContextProvider = ({ children }) => {
     setCartItems((prev) => {
       if (prev[itemId] <= 1) {
         removeFromCart(itemId)
-        const { [itemId]: removedItem, ...rest } = prev
+        const { [itemId]: _, ...rest } = prev
         return rest
       } else {
         const newQuantity = Math.max(0, (prev[itemId] || 0) - 1)
@@ -84,7 +84,6 @@ const ShopContextProvider = ({ children }) => {
   }
 
   const getTotalCartAmount = () => {
-    // Vérifiez que les produits sont chargés
     if (isProductsLoading || !products.length) {
       console.log(
         'En attente du chargement des produits ou aucun produit chargé.',
@@ -92,68 +91,64 @@ const ShopContextProvider = ({ children }) => {
       return 0
     }
 
-    // Calculez le total en utilisant les prix des produits et les quantités du panier
     return Object.keys(cartItems).reduce((total, itemId) => {
       const product = products.find((p) => p._id.toString() === itemId)
-      console.log('product getTotalCartAmount:', product)
-      if (product && product.new_price) {
-        console.log('product.price:', product.new_price)
-        const quantity = parseInt(cartItems[itemId], 10)
-        if (!isNaN(quantity)) {
-          total += product.new_price * quantity
-        }
-        console.log('total getTotalCartAmount:', total)
+      if (!product) {
+        console.warn(`Produit avec l'ID ${itemId} non trouvé.`)
+        return total
+      }
+
+      const quantity = parseInt(cartItems[itemId], 10)
+      if (!isNaN(quantity) && product.new_price) {
+        total += product.new_price * quantity
       }
       return total
     }, 0)
   }
 
-  const addToCart = (product) => {
-    console.log('productId:', product.itemId)
+  const addToCart = (product, quantity = 1) => {
+    const productExists = products.some(
+      (p) => p._id.toString() === product.itemId,
+    )
+    console.log('productExists:', productExists)
+    if (!productExists) {
+      console.error(
+        `Erreur : Le produit avec l'ID ${product.itemId} n'existe pas.`,
+      )
+      return
+    }
+    if (!product.itemId || typeof product.itemId !== 'string') {
+      console.error('Erreur : ID du produit manquant ou invalide.')
+      return
+    }
+
+    if (typeof quantity !== 'number' || quantity <= 0) {
+      console.error('Erreur : Quantité invalide.')
+      return
+    }
+
     setCartItems((prev) => {
-      const newCartItems = { ...prev }
-      const quantity = 1
-      if (typeof product.itemId === 'string' && typeof quantity === 'number') {
-        if (newCartItems[product.itemId]) {
-          newCartItems[product.itemId] += quantity
-        } else {
-          newCartItems[product.itemId] = quantity
-        }
-        console.log('newCartItems:', newCartItems)
-        return newCartItems
-      } else {
-        console.error(
-          'productId doit être une chaîne et quantity doit être un nombre.',
-        )
-        return prev
+      const newCartItems = {
+        ...prev,
+        [product.itemId]: (prev[product.itemId] || 0) + quantity,
       }
+      console.log('Produit ajouté au panier avec succès :', newCartItems)
+      return newCartItems
     })
 
     fetch(`${backendUrl}/addtocart`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        productId: product.itemId,
-        quantity: 1,
-      }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ productId: product.itemId, quantity }),
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok')
-        }
-        return response.json()
-      })
-      .then((data) => {
-        console.log('Item added to cart:', data)
-      })
-      .catch((error) => {
+      .then((response) => response.json())
+      .then((data) => console.log('Item added to cart:', data))
+      .catch((error) =>
         console.error(
           'There has been a problem with your fetch operation:',
           error,
-        )
-      })
+        ),
+      )
   }
 
   const removeFromCart = (productId) => {

@@ -75,7 +75,7 @@ const Popular = () => {
               <div className="item-container">
                 <Item
                   key={i}
-                  id={item.id}
+                  _id={item._id}
                   name={item.name}
                   image={item.image}
                   new_price={item.new_price}

@@ -10,6 +10,7 @@ const Navbar = () => {
   const { cartItems, getTotalCartItems } = useContext(ShopContext)
   const [totalItems, setTotalItems] = useState(getTotalCartItems())
 
+  console.log('Total items in cart:', getTotalCartItems())
   console.log('Valeur retournée par getTotalCartItems:', totalItems)
 
   useEffect(() => {
@@ -98,7 +99,7 @@ const Navbar = () => {
           <img src={cart_icon} alt="cart" />
         </Link>
         <div className="nav-cart-count">
-          {Number.isNaN(totalItems) ? 0 : totalItems}
+          {Number.isNaN(getTotalCartItems()) ? 0 : getTotalCartItems()}
         </div>
       </div>
     </div>

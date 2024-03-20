@@ -16,31 +16,65 @@ const ProductDisplay = () => {
   const { addToCart } = useContext(ShopContext)
   const [selectedSize, setSelectedSize] = useState('')
   const [product, setProduct] = useState(null)
+  const [error, setError] = useState(null)
+  const [addToCartError, setAddToCartError] = useState('')
 
+  const handleAddToCart = () => {
+    if (!selectedSize) {
+      setAddToCartError('Veuillez sélectionner une taille.')
+      return
+    }
+
+    try {
+      addToCart({ itemId: product._id, size: selectedSize })
+      // Reset error if the operation is successful
+      setAddToCartError('')
+      setIsModalOpen(true)
+    } catch (error) {
+      setAddToCartError(error.message)
+    }
+  }
+
+  // Afficher l'erreur dans votre composant si elle existe
+  {
+    addToCartError && <div className="error">{addToCartError}</div>
+  }
+
+  console.log('productId:', productId)
   const fetchProduct = async () => {
     try {
-      const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL
-      const { data } = await axios.get(`${backendUrl}/products/${productId}`)
-      setProduct(data)
+      if (productId) {
+        try {
+          const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL
+          console.log(`${backendUrl}/products/${productId}`)
+
+          const { data } = await axios.get(
+            `${backendUrl}/products/${productId}`,
+          )
+          setProduct(data)
+          console.log('Produit récupéré: productDisplay', data)
+        } catch (error) {
+          console.error(
+            'Erreur lors de la récupération des détails du produit:',
+            error,
+          )
+        }
+      } else {
+        console.error('productId est undefined')
+      }
     } catch (error) {
       console.error(
         'Erreur lors de la récupération des détails du produit:',
         error,
       )
+      setError('Impossible de récupérer les détails du produit.')
     }
   }
 
   useEffect(() => {
     fetchProduct()
   }, [productId])
-  const handleAddToCart = () => {
-    if (!selectedSize) {
-      alert('Please select a size.')
-      return
-    }
-    addToCart({ itemId: product._id, size: selectedSize }) // Assurez-vous d'utiliser _id ici
-    setIsModalOpen(true)
-  }
+
   const selectSize = (size) => {
     setSelectedSize(size)
   }
@@ -70,7 +104,11 @@ const ProductDisplay = () => {
   }
 
   if (!product) {
-    return <div>Chargement...</div>
+    return <div>Chargement des produits...</div>
+  }
+
+  if (error) {
+    return <div>Une erreur est survenue : {error.message}</div>
   }
 
   return (
@@ -105,6 +143,7 @@ const ProductDisplay = () => {
           </div>
 
           <div className="productdisplay-right-prices">
+            <h3>Prix: </h3>
             <div className="productdisplay-right-price-old">
               ${product.old_price}
             </div>

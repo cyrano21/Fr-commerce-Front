@@ -2,6 +2,7 @@ import footer_logo from '../assets/logo_big.png'
 import instagram_icon from '../assets/instagram_icon.png'
 import pintrest_icon from '../assets/pintester_icon.png'
 import whatsapp_icon from '../assets/whatsapp_icon.png'
+import { NavLink } from 'react-router-dom'
 
 const Footer = () => {
   return (
@@ -15,7 +16,14 @@ const Footer = () => {
         <li>Produits</li>
         <li>Bureaux</li>
         <li>À propos</li>
-        <li>Contact</li>
+        <li>
+          <NavLink
+            to="/contact"
+            className={({ isActive }) => (isActive ? 'active-link' : '')}
+          >
+            Contact
+          </NavLink>
+        </li>
       </ul>
 
       <div className="footer-social-icons">

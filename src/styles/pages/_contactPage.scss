@@ -1,0 +1,69 @@
+$color-background: rgba(255, 255, 255, 0.2);
+$color-border: rgba(255, 255, 255, 0.3);
+$color-font: #fff;
+$color-error: red;
+
+
+@mixin flexCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+
+.contact{
+  width: 100%;
+  @include flexCenter;
+  min-height: 100vh;
+  background: url('../../background.png') center / cover no-repeat;
+
+  .contact-container {
+    width: 580px;
+    margin: auto;
+    padding: 40px 60px;
+    position: relative;
+    background: $color-background;
+    border: 2px solid $color-border;
+    border-radius: 20px;
+    backdrop-filter: blur(15px);
+    display: flex;
+    flex-direction: column;
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+    }
+
+    button[type="submit"] {
+      background: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+
+      &:hover {
+        background: #0056b3;
+      }
+    }
+  }
+}
+

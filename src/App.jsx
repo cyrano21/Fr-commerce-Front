@@ -11,6 +11,7 @@ import kids_banner from './assets/banner_kids.png'
 import PaymentPage from './Components/PaymentPage.jsx'
 import ProductDisplay from './Components/ProductDisplay.jsx'
 import ShopContextProvider from './Context/ShopContext.jsx'
+import ContactPage from './Pages/ContactPage.jsx'
 
 localStorage.setItem('cartItems', JSON.stringify({})) // Pour réinitialiser lors du développement
 
@@ -37,6 +38,7 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/payment" element={<PaymentPage />} />
           <Route path="/login" element={<LoginSignup />} />
+          <Route path="/contact" element={<ContactPage />} />
         </Routes>
         <Footer />
       </ShopContextProvider>

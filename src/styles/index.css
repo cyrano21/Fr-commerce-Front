@@ -892,8 +892,15 @@ code {
   color: #252525;
   font-size: 20px;
 }
+.footer .footer-links .active-link {
+  color: grey;
+}
 .footer .footer-links li {
   cursor: pointer;
+}
+.footer .footer-links li a {
+  text-decoration: none;
+  color: inherit;
 }
 .footer .footer-social-icons {
   display: flex;
@@ -1732,19 +1739,33 @@ code {
 }
 .loginsignup {
   width: 100%;
-  height: 80vh;
-  background: #fce3fe;
-  padding-top: 100px;
+  background: url("../../background.png") center/cover no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
 .loginsignup .loginsignup-container {
   width: 580px;
-  height: 600px;
-  background: white;
+  height: 500px;
   margin: auto;
   padding: 40px 60px;
+  position: relative;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  backdrop-filter: blur(15px);
+  display: flex;
+  flex-direction: column;
 }
 .loginsignup .loginsignup-container h1 {
+  color: #fff;
   margin: 20px 0;
+}
+.loginsignup .loginsignup-container .error-message {
+  color: red;
+  text-align: center;
+  margin-bottom: 15px;
 }
 .loginsignup .loginsignup-container .loginsignup-fields {
   display: flex;
@@ -1753,30 +1774,48 @@ code {
   margin-top: 30px;
 }
 .loginsignup .loginsignup-container .loginsignup-fields input {
-  height: 72px;
+  margin-bottom: 15px; /* Espacement entre les champs */
   width: 100%;
-  padding-left: 20px;
-  border: 1px solid #c9c9c9;
+  height: 50px;
+  background: transparent;
+  border: 2px solid #fff; /* Bordure blanche pour les champs */
+  border-radius: 10px; /* Bordures arrondies pour les champs */
   outline: none;
-  color: #5c5c5c;
-  font-size: 18px;
+  padding: 0 15px;
+  color: #fff;
+  font-size: 1em;
+}
+.loginsignup .loginsignup-container .loginsignup_agree {
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+}
+.loginsignup .loginsignup-container .loginsignup_agree input[type=checkbox] {
+  margin-right: 10px;
 }
 .loginsignup .loginsignup-container button {
-  width: 580px;
-  height: 72px;
-  color: white;
-  background: #ff4141;
-  margin-top: 30px;
+  width: 50%;
+  height: 40px;
+  border-radius: 20px;
+  background: #fff;
   border: none;
-  font-size: 24px;
-  font-weight: 500;
   cursor: pointer;
+  font-size: 1em;
+  font-weight: 600;
+  color: black;
+  align-self: center;
+  margin-bottom: 50px;
+  margin-top: 30px;
 }
-.loginsignup .loginsignup-container button.loginsignup-container .loginsignup .loginsignup-container button {
+.loginsignup .loginsignup-container button[disabled] {
+  height: 100px;
+}
+.loginsignup .loginsignup-container.loginsignup-container .loginsignup .loginsignup-container {
   width: 100%;
 }
 .loginsignup .loginsignup-container .loginsignup-login {
-  margin-top: 20px;
+  text-align: center;
+  margin-top: 15px;
   color: #5c5c5c;
   font-size: 18px;
   font-weight: 500;
@@ -1796,16 +1835,13 @@ code {
   font-weight: 500;
 }
 @media (max-width: 1280px) {
-  .loginsignup {
-    padding-top: 50px;
-  }
   .loginsignup .loginsignup-container {
     width: auto;
     max-width: 500px;
     max-height: 500px;
   }
   .loginsignup .loginsignup-container h1 {
-    margin: 10px 0px;
+    margin: 10px 0;
   }
   .loginsignup .loginsignup-container .loginsignup-fields {
     gap: 20px;
@@ -1814,9 +1850,6 @@ code {
   .loginsignup .loginsignup-container .loginsignup-fields input {
     height: 65px;
     width: 93%;
-  }
-  .loginsignup .loginsignup-container button {
-    width: 100%;
   }
   .loginsignup .loginsignup-container .loginsignup-login {
     font-size: 16px;
@@ -1840,9 +1873,62 @@ code {
     height: 50px;
   }
   .loginsignup .loginsignup-container button {
-    height: 50px;
     font-size: 16px;
   }
+  .loginsignup .loginsignup-container .loginsignup-login {
+    margin-top: 50px;
+    font-size: 14px;
+  }
+}
+
+.contact {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: url("../../background.png") center/cover no-repeat;
+}
+.contact .contact-container {
+  width: 580px;
+  margin: auto;
+  padding: 40px 60px;
+  position: relative;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  backdrop-filter: blur(15px);
+  display: flex;
+  flex-direction: column;
+}
+.contact .contact-container h2 {
+  margin-bottom: 20px;
+}
+.contact .contact-container .form-group {
+  margin-bottom: 20px;
+}
+.contact .contact-container .form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+.contact .contact-container .form-group input,
+.contact .contact-container .form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+.contact .contact-container button[type=submit] {
+  background: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.contact .contact-container button[type=submit]:hover {
+  background: #0056b3;
 }
 
 /*# sourceMappingURL=index.css.map */

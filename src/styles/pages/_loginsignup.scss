@@ -1,18 +1,44 @@
+
+$color-background: rgba(255, 255, 255, 0.2);
+$color-border: rgba(255, 255, 255, 0.3);
+$color-font: #fff;
+$color-error: red;
+
+@mixin flexCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
 .loginsignup {
   width: 100%;
-  height: 80vh;
-  background: #fce3fe;
-  padding-top: 100px;
+  background: url('../../background.png') center / cover no-repeat;
+  @include flexCenter;
+  min-height: 100vh;
 
   .loginsignup-container {
     width: 580px;
-    height: 600px;
-    background: white;
+    height: 500px;
     margin: auto;
     padding: 40px 60px;
+    position: relative;
+    background: $color-background;
+    border: 2px solid $color-border;
+    border-radius: 20px;
+    backdrop-filter: blur(15px);
+    display: flex;
+    flex-direction: column;
 
     h1 {
+      color: $color-font;
       margin: 20px 0;
+    }
+
+    .error-message {
+      color: $color-error;
+      text-align: center;
+      margin-bottom: 15px;
     }
 
     .loginsignup-fields {
@@ -22,34 +48,54 @@
       margin-top: 30px;
 
       & input {
-        height: 72px;
+        margin-bottom: 15px; /* Espacement entre les champs */
         width: 100%;
-        padding-left: 20px;
-        border: 1px solid #c9c9c9;
+        height: 50px;
+        background: transparent;
+        border: 2px solid #fff; /* Bordure blanche pour les champs */
+        border-radius: 10px; /* Bordures arrondies pour les champs */
         outline: none;
-        color: #5c5c5c;
-        font-size: 18px;
+        padding: 0 15px;
+        color: #fff;
+        font-size: 1em;
+      }
+    }
+
+    .loginsignup_agree {
+      margin: 20px 0;
+      display: flex;
+      align-items: center;
+      input[type="checkbox"] {
+        margin-right: 10px;
       }
     }
 
     button {
-      width: 580px;
-      height: 72px;
-      color: white;
-      background: #ff4141;
-      margin-top: 30px;
+      width: 50%;
+      height: 40px;
+      border-radius: 20px;
+      background: $color-font;
       border: none;
-      font-size: 24px;
-      font-weight: 500;
       cursor: pointer;
+      font-size: 1em;
+      font-weight: 600;
+      color: black;
+      align-self: center;
+      margin-bottom: 50px;
+      margin-top: 30px;
+    }
+      button[disabled] {
+        height: 100px;
+      }
 
       &.loginsignup-container & {
         width: 100%;
       }
-    }
+
 
     .loginsignup-login {
-      margin-top: 20px;
+      text-align: center;
+      margin-top: 15px;
       color: #5c5c5c;
       font-size: 18px;
       font-weight: 500;
@@ -73,7 +119,6 @@
   }
 
   @media (max-width: 1280px) {
-    padding-top: 50px;
 
     .loginsignup-container {
       width: auto;
@@ -81,7 +126,7 @@
       max-height: 500px;
 
       h1 {
-        margin: 10px 0px;
+        margin: 10px 0;
       }
 
       .loginsignup-fields {
@@ -94,9 +139,7 @@
         }
       }
 
-      button {
-        width: 100%;
-      }
+
 
       .loginsignup-login {
         font-size: 16px;
@@ -126,8 +169,12 @@
       }
 
       button {
-        height: 50px;
         font-size: 16px;
+      }
+
+      .loginsignup-login {
+        margin-top: 50px;
+        font-size: 14px;
       }
     }
   }

@@ -290,8 +290,9 @@
   }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 630px) {
   .productdisplay {
+    width: 100%;
     flex-direction: column;
     margin: 20px 10px; /* Ajustez les marges pour les petits écrans */
 
@@ -313,7 +314,13 @@
         align-items: center;
         margin: 20px 0 ;
         h1 {
-          font-size: 16px;
+          text-align: center;
+          font-size: 1rem;
+        }
+        .productdisplay-right-description{
+          font-size: 1rem;
+          width: 60%;
+          text-align: center;
         }
         .productdisplay-right-stars{
           display: flex;

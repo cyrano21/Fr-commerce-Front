@@ -20,10 +20,12 @@
   align-items: center;
   gap: 10px;
 
-  p {
+  h1 {
     color: #333;
-    font-size: 38px;
-    font-weight: 600;
+    font-size: 28px;
+    font-weight: 700;
+    text-shadow: -1px 0px 20px rgb(0 0 0 / 51%);
+
   }
   img {
     height: 50px;
@@ -134,7 +136,7 @@
   img {
       width: 40px;
     }
-    p {
+    h1 {
       font-size: 25px;
     }
 
@@ -143,6 +145,11 @@
       gap: 30px;
       font-size: 16px;
     }
+
+    .nav-menu {
+    &.visible {
+      margin: 0 20px;
+    }}
 
     .nav-login-cart {
       gap: 30px;
@@ -167,7 +174,7 @@
 
     .nav-logo {
       gap: 5px;
-      p {
+      h1 {
         font-size: 22px;
       }
     }
@@ -214,6 +221,7 @@
     opacity: 0;
     transition: visibility 0.5s, opacity 0.5s linear;
     &.visible {
+      margin: 0;
       visibility: visible;
       opacity: 1;
       display: flex;

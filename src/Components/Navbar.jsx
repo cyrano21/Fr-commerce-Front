@@ -25,7 +25,7 @@ const Navbar = () => {
     <div className={`nav ${isSticky ? 'sticky' : ''}`}>
       <Link to="/" className="nav-logo">
         <img src={logo} alt="logo" />
-        <p>ACHETEUR</p>
+        <h1>ACHETEUR</h1>
       </Link>
       <img
         onClick={handleToggleDropdown}

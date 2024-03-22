@@ -223,37 +223,19 @@
   .nav-dropdown.open {
     transform: rotate(90deg);
   }
+   .nav-login-cart{
+      .login{
+        background:rgb(241,222,240)
+      }
+    }
 }}
 
 @media(max-width: 500px) {
-
-
   .nav {
     width: 100%;
     padding-left: 0;
-   margin: 0 auto;
+    margin: 0 auto;
     display: flex;
-    align-items: center;;
-    .nav-logo {
-      transform: scale(0.8);
-    }
-    .nav-menu {
-      width: 100%;
-    }
-    .nav-login-cart {
-      transform: scale(0.8);
-      gap: 20px;
-      button {
-        width: 90px;
-        height: 35px;
-        font-size: 14px;
-      }
-    }
+    align-items: center;
   }
 }
-
-
-
-
-
-

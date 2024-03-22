@@ -225,6 +225,9 @@ code {
   .nav .nav-dropdown.open {
     transform: rotate(90deg);
   }
+  .nav .nav-login-cart .login {
+    background: rgb(241, 222, 240);
+  }
 }
 @media (max-width: 500px) {
   .nav {
@@ -233,21 +236,6 @@ code {
     margin: 0 auto;
     display: flex;
     align-items: center;
-  }
-  .nav .nav-logo {
-    transform: scale(0.8);
-  }
-  .nav .nav-menu {
-    width: 100%;
-  }
-  .nav .nav-login-cart {
-    transform: scale(0.8);
-    gap: 20px;
-  }
-  .nav .nav-login-cart button {
-    width: 90px;
-    height: 35px;
-    font-size: 14px;
   }
 }
 .hero {

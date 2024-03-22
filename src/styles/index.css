@@ -65,12 +65,13 @@ code {
   display: flex;
   align-items: center;
   list-style: none;
-  gap: 50px;
+  gap: 20px;
   color: #626262;
   font-size: 20px;
   font-weight: 500;
   padding: 10px 20px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  background: rgba(240, 220, 240, 0.9607843137);
 }
 .nav .nav-menu.visible {
   display: flex;

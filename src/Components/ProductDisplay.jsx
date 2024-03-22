@@ -1,13 +1,15 @@
 import { ShopContext } from '../Context/ShopContext.jsx'
-import Modal from './Modal.jsx'
 import { useParams } from 'react-router-dom'
 import {
   useFetchProduct,
   selectSize,
   handleAddToCart,
-  renderStars,
 } from './productDisplayComponents/productDisplayFunctions.jsx'
 import { useContext, useState } from 'react'
+import ProductDisplayImages from './productDisplayComponents/ProductDisplayImages.jsx'
+import ProductDisplayModal from './productDisplayComponents/ProductDisplayModal.jsx'
+import ProductDisplaySizeSelector from './productDisplayComponents/ProductDisplaySizeSelector.jsx'
+import ProductDisplayStars from './productDisplayComponents/ProductDisplayStars.jsx'
 
 const ProductDisplay = () => {
   const { productId } = useParams()
@@ -19,39 +21,23 @@ const ProductDisplay = () => {
   useFetchProduct(setProduct, productId)
 
   const handleSizeSelection = selectSize(setSelectedSize)
-  const handleCartAddition = () =>
-    handleAddToCart(selectedSize, addToCart, product, setSelectedSize)
+  const handleCartAddition = () => {
+    if (selectedSize === '') {
+      // Si aucune taille n'est sélectionnée, ouvrez le modal pour la sélection de la taille
+      setIsModalOpen(true)
+    } else {
+      // Sinon, continuez à ajouter le produit au panier
+      handleAddToCart(selectedSize, addToCart, product, setSelectedSize)
+    }
+  }
 
   return (
     <div className="productdisplay">
-      <div className="productdisplay-left">
-        <div className="productdisplay-img-list">
-          <img src={product?.image} alt="img" />
-          <img src={product?.image} alt="img" />
-          <img src={product?.image} alt="img" />
-          <img src={product?.image} alt="img" />
-        </div>
-        <div className="productdisplay-img">
-          <img
-            className="productdisplay-main-img"
-            src={product?.image}
-            alt="Produit"
-          />
-        </div>
-      </div>
+      <ProductDisplayImages product={product} />
       <div className="productdisplay-right">
         <div>
           <h1>{product?.name}</h1>
-          <div className="productdisplay-right-stars">
-            {product && renderStars(product.rating)}
-            <p>
-              (
-              {product?.numberOfReviews !== undefined
-                ? product.numberOfReviews
-                : 'Aucun avis'}
-              )
-            </p>
-          </div>
+          <ProductDisplayStars product={product} />
 
           <div className="productdisplay-right-prices">
             <h3>Prix: </h3>
@@ -67,21 +53,10 @@ const ProductDisplay = () => {
               ? product?.description
               : 'Un t-shirt léger, généralement tricoté, ajusté avec un col rond et des manches courtes, porté comme un sous-vêtement ou un vêtement extérieur.'}
           </div>
-
-          <div className="productdisplay-right-size">
-            <h1>Select Size</h1>
-            <div className="productdisplay-right-sizes">
-              {['S', 'M', 'L', 'XL', 'XXL'].map((size) => (
-                <div
-                  key={size}
-                  className={`size-option ${selectedSize === size ? 'selected' : ''}`}
-                  onClick={() => handleSizeSelection(size)}
-                >
-                  {size}
-                </div>
-              ))}
-            </div>
-          </div>
+          <ProductDisplaySizeSelector
+            selectedSize={selectedSize}
+            handleSizeSelection={handleSizeSelection}
+          />
           <button onClick={() => handleCartAddition()}>
             AJOUTER AU PANIER
           </button>
@@ -94,20 +69,10 @@ const ProductDisplay = () => {
         </div>
 
         {isModalOpen && (
-          <Modal onClose={() => setIsModalOpen(false)}>
-            <h2>Sélectionnez une taille</h2>
-            {['S', 'M', 'L', 'XL', 'XXL'].map((size) => (
-              <button
-                key={size}
-                onClick={() => {
-                  setSelectedSize(size)
-                  setIsModalOpen(false)
-                }}
-              >
-                {size}
-              </button>
-            ))}
-          </Modal>
+          <ProductDisplayModal
+            setSelectedSize={setSelectedSize}
+            setIsModalOpen={setIsModalOpen}
+          />
         )}
       </div>
     </div>

@@ -9,8 +9,9 @@ const Navbar = () => {
   let [menu, setMenu] = useState('shop')
   const { cartItems, getTotalCartItems } = useContext(ShopContext)
   const [totalItems, setTotalItems] = useState(getTotalCartItems())
+  const [isMenuVisible, setIsMenuVisible] = useState(false)
+  const [isSticky, setIsSticky] = useState(false)
 
-  console.log('Total items in cart:', getTotalCartItems())
   console.log('Valeur retournée par getTotalCartItems:', totalItems)
 
   useEffect(() => {
@@ -20,24 +21,36 @@ const Navbar = () => {
 
   const menuRef = useRef()
   console.log('totalItems:', totalItems)
-  const dropdown_toggle = (e) => {
-    menuRef.current.classList.toggle('nav-menu-visible')
-    e.target.classList.toggle('open')
-  }
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsSticky(window.scrollY > 100)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
+  const toggleDropdown = () => setIsMenuVisible(!isMenuVisible)
 
   return (
-    <div className="nav">
+    <div className={`nav ${isSticky ? 'sticky' : ''}`} ref={menuRef}>
       <Link to="/" style={{ textDecoration: 'none' }} className="nav-logo">
         <img src={logo} alt="logo" />
         <p>ACHETEUR</p>
       </Link>
       <img
-        onClick={dropdown_toggle}
-        className="nav-dropdown"
+        onClick={toggleDropdown}
+        className={`nav-dropdown ${isMenuVisible ? 'open' : ' '}`}
         src={nav_dropdown}
-        alt=""
+        alt="Dropdown toggle"
       />
-      <ul ref={menuRef} className="nav-menu">
+      <ul
+        ref={menuRef}
+        className={`nav-menu ${isMenuVisible ? 'visible' : ' '}`}
+      >
         <li
           onClick={() => {
             setMenu('shop')
@@ -99,7 +112,7 @@ const Navbar = () => {
           <img src={cart_icon} alt="cart" />
         </Link>
         <div className="nav-cart-count">
-          {Number.isNaN(getTotalCartItems()) ? 0 : getTotalCartItems()}
+          {Number.isNaN(totalItems) ? 0 : totalItems}
         </div>
       </div>
     </div>

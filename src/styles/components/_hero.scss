@@ -160,7 +160,8 @@
 
     .hero-left {
       padding: 20px;
-      text-align: center;
+      display: flex;
+      align-items: center;
 
       h2, p {
         font-size: 20px;

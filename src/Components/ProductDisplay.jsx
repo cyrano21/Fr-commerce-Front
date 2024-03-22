@@ -20,18 +20,12 @@ const ProductDisplay = () => {
   const [addToCartError, setAddToCartError] = useState('')
 
   const handleAddToCart = () => {
-    if (!selectedSize) {
-      setAddToCartError('Veuillez sélectionner une taille.')
-      return
-    }
-
-    try {
+    if (selectedSize) {
       addToCart({ itemId: product._id, size: selectedSize })
-      // Reset error if the operation is successful
-      setAddToCartError('')
-      setIsModalOpen(true)
-    } catch (error) {
-      setAddToCartError(error.message)
+      setIsModalOpen(false) // Fermer le modal de sélection de taille
+    } else {
+      setIsModalOpen(true) // Ouvrir le modal de sélection de taille si aucune taille n'est sélectionnée
+      setAddToCartError('Veuillez sélectionner une taille.')
     }
   }
 
@@ -182,8 +176,18 @@ const ProductDisplay = () => {
 
         {isModalOpen && (
           <Modal onClose={() => setIsModalOpen(false)}>
-            <p>Le produit a bien été ajouté au panier !</p>
-            <button onClick={() => setIsModalOpen(false)}></button>
+            <h2>Sélectionnez une taille</h2>
+            {['S', 'M', 'L', 'XL', 'XXL'].map((size) => (
+              <button
+                key={size}
+                onClick={() => {
+                  setSelectedSize(size)
+                  setIsModalOpen(false)
+                }}
+              >
+                {size}
+              </button>
+            ))}
           </Modal>
         )}
       </div>

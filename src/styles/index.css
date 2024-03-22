@@ -24,10 +24,20 @@ code {
 
 .nav {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-  padding: 16px;
-  box-shadow: 0 1px 3px -2px black;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+.nav.sticky {
+  position: fixed;
+  top: 0;
+  max-width: 100%;
+  width: 100%;
+  padding: 10px 10px 10px 0;
+  background-color: white;
+  z-index: 1000;
 }
 .nav .nav-logo {
   display: flex;
@@ -35,11 +45,23 @@ code {
   gap: 10px;
 }
 .nav .nav-logo p {
-  color: #171717;
+  color: #333;
   font-size: 38px;
   font-weight: 600;
 }
+.nav .nav-logo img {
+  height: 50px;
+}
+.nav .nav-dropdown {
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+}
+.nav .nav-dropdown.open {
+  transform: rotate(180deg);
+}
 .nav .nav-menu {
+  width: 50%;
+  justify-content: space-around;
   display: flex;
   align-items: center;
   list-style: none;
@@ -47,6 +69,13 @@ code {
   color: #626262;
   font-size: 20px;
   font-weight: 500;
+  padding: 10px 20px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+.nav .nav-menu.visible {
+  display: flex;
+  gap: 20px;
+  background: rgba(240, 220, 240, 0.9607843137);
 }
 .nav .nav-menu li {
   display: flex;
@@ -55,6 +84,14 @@ code {
   justify-content: center;
   gap: 3px;
   cursor: pointer;
+}
+.nav .nav-menu li a {
+  color: #333;
+  text-decoration: none;
+  font-weight: bold;
+}
+.nav .nav-menu li a:hover {
+  color: rgb(179, 51, 128);
 }
 .nav .nav-menu hr {
   border: none;
@@ -164,47 +201,42 @@ code {
     display: block;
     width: 30px;
     rotate: -90deg;
-    transition: 0.5s;
+    transition: 0.7s;
   }
   .nav .nav-menu {
     display: none;
-    height: 80px;
     width: 100%;
     position: absolute;
     background-color: white;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
     justify-content: center;
-    top: 50px;
+    top: 70px;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0.5s, opacity 0.5s linear;
   }
-  .nav .nav-menu-visible {
+  .nav .nav-menu.visible {
+    visibility: visible;
+    opacity: 1;
     display: flex;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   }
   .nav .nav-dropdown.open {
     transform: rotate(90deg);
   }
 }
 @media (max-width: 500px) {
-  body {
-    width: 100%;
-  }
-  body #root {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
   .nav {
+    width: 100%;
     padding-left: 0;
     margin: 0 auto;
     display: flex;
     align-items: center;
-    justify-content: normal;
   }
   .nav .nav-logo {
     transform: scale(0.8);
   }
   .nav .nav-menu {
-    top: 50px;
     width: 100%;
   }
   .nav .nav-login-cart {
@@ -348,7 +380,8 @@ code {
   }
   .hero .hero-left {
     padding: 20px;
-    text-align: center;
+    display: flex;
+    align-items: center;
   }
   .hero .hero-left h2, .hero .hero-left p {
     font-size: 20px;
